@@ -1,54 +1,113 @@
-import DeployButton from "../components/DeployButton";
-import AuthButton from "../components/AuthButton";
+import Link from "next/link";
+import { headers } from "next/headers";
 import { createClient } from "@/utils/supabase/server";
-import ConnectSupabaseSteps from "@/components/tutorial/ConnectSupabaseSteps";
-import SignUpUserSteps from "@/components/tutorial/SignUpUserSteps";
-import Header from "@/components/Header";
+import { redirect } from "next/navigation";
+import { SubmitButton } from "./submit-button";
 
-export default async function Index() {
-  const canInitSupabaseClient = () => {
-    // This function is just for the interactive tutorial.
-    // Feel free to remove it once you have Supabase connected.
+export default function Login({
+  searchParams,
+}: {
+  searchParams: { message: string };
+}) {
+  const isAdmin = async (id: string | undefined) => {
+    "use server";
+    const supabase = createClient();
     try {
-      createClient();
-      return true;
-    } catch (e) {
+      const { data, error } = await supabase
+        .from("profiles")
+        .select("is_admin")
+        .eq("id", id)
+        .single();
+
+      if (!error) return data.is_admin;
+      return false;
+    } catch (error) {
       return false;
     }
   };
 
-  const isSupabaseConnected = canInitSupabaseClient();
+  const signIn = async (formData: FormData) => {
+    "use server";
+    const supabase = createClient();
+    const email = formData.get("email") as string;
+    const password = formData.get("password") as string;
+
+    const { data, error } = await supabase.auth.signInWithPassword({
+      email,
+      password,
+    });
+
+    if (error) {
+      return redirect("/login?message=Could not authenticate user");
+    }
+
+    const userId = data?.user?.id;
+    if (userId && (await isAdmin(userId))) {
+      return redirect("/protected");
+    } else {
+      await supabase.auth.signOut();
+      return redirect("/login?message=Could not authenticate user");
+    }
+  };
 
   return (
-    <div className="flex-1 w-full flex flex-col gap-20 items-center">
-      <nav className="w-full flex justify-center border-b border-b-foreground/10 h-16">
-        <div className="w-full max-w-4xl flex justify-between items-center p-3 text-sm">
-          <DeployButton />
-          {isSupabaseConnected && <AuthButton />}
+    <div className="flex flex-row  items-center w-full h-screen">
+      <div className="flex flex-row justify-center items-center  w-full h-screen">
+        <div className="flex  justify-center items-start w-1/2">
+          <div className="flex w-2/3 h-2/3 gap-[56px] flex-col justify-center items-start">
+            <div className="flex flex-col justify-center items-start gap-[8px]">
+              <h1 className="not-italic font-semibold text-[36px] leading-[56px] text-black">
+                Sign In
+              </h1>
+              <p className="font-['SF_Compact_Text'] not-italic font-normal text-[16px] opacity-50 text-black">
+                Enter your email and password to sign in
+              </p>
+            </div>
+
+            <form className="animate-in flex-1 flex flex-col items-start p-0  justify-center gap-[29px] text-foreground">
+              <div className="flex flex-col gap-3">
+                <label className="text-md text-black" htmlFor="email">
+                  Email
+                </label>
+                <input
+                  className="rounded-2xl px-4 py-2 bg-inherit border-[#E4E4E4] border mb-6 w-[410px] text-black"
+                  name="email"
+                  placeholder="you@example.com"
+                  required
+                />
+              </div>
+              <div className="flex flex-col gap-3">
+                <label className="text-md text-black" htmlFor="password">
+                  Password
+                </label>
+                <input
+                  className="rounded-2xl px-4 py-2 bg-inherit border-[#E4E4E4] border mb-6 w-[410px] text-black"
+                  type="password"
+                  name="password"
+                  placeholder="••••••••"
+                  required
+                />
+              </div>
+              <SubmitButton
+                formAction={signIn}
+                className="bg-[#24BAEC] w-full rounded-2xl px-4 py-2 text-foreground mb-2"
+                pendingText="Signing In..."
+              >
+                Sign In
+              </SubmitButton>
+
+              {searchParams?.message && (
+                <p className="mt-4 p-4 bg-foreground/10 text-foreground text-center">
+                  {searchParams.message}
+                </p>
+              )}
+            </form>
+          </div>
         </div>
-      </nav>
-
-      <div className="animate-in flex-1 flex flex-col gap-20 opacity-0 max-w-4xl px-3">
-        <Header />
-        <main className="flex-1 flex flex-col gap-6">
-          <h2 className="font-bold text-4xl mb-4">Next steps</h2>
-          {isSupabaseConnected ? <SignUpUserSteps /> : <ConnectSupabaseSteps />}
-        </main>
+        <div className="w-1/2 h-screen">
+          <img className="h-screen w-full" src="https://cdn.discordapp.com/attachments/730134376129626225/1240764478283583539/image.png?ex=6647bf77&is=66466df7&hm=39d860f78d864167fa5bf52e3e1ab93abcf0e132bfbd0a94d0b2a43c11eb66ba&"></img>
+        </div>
       </div>
-
-      <footer className="w-full border-t border-t-foreground/10 p-8 flex justify-center text-center text-xs">
-        <p>
-          Powered by{" "}
-          <a
-            href="https://supabase.com/?utm_source=create-next-app&utm_medium=template&utm_term=nextjs"
-            target="_blank"
-            className="font-bold hover:underline"
-            rel="noreferrer"
-          >
-            Supabase
-          </a>
-        </p>
-      </footer>
     </div>
   );
 }
