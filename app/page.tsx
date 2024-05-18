@@ -105,7 +105,7 @@ export default function Login({
           </div>
         </div>
         <div className="w-1/2 h-screen">
-          <img className="h-screen w-full" src="https://cdn.discordapp.com/attachments/730134376129626225/1240764478283583539/image.png?ex=6647bf77&is=66466df7&hm=39d860f78d864167fa5bf52e3e1ab93abcf0e132bfbd0a94d0b2a43c11eb66ba&"></img>
+          <img className="h-screen w-full" src="https://cdn.discordapp.com/attachments/730134376129626225/1240764478283583539/image.png?ex=664910f7&is=6647bf77&hm=c9700b758f2caef14616fe20dd859048452015749482343b4013dd72e57a7d09&"></img>
         </div>
       </div>
     </div>
