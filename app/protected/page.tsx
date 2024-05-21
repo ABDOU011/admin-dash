@@ -18,10 +18,11 @@ export default async function ProtectedPage() {
   if (!user) {
     return redirect("/");
   }
+  
 
   return (
     <div className="bg-[#F4F7FE] w-full">
             home
-        </div>
+    </div>
   );
 }

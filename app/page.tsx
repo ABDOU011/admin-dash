@@ -3,7 +3,7 @@ import { headers } from "next/headers";
 import { createClient } from "@/utils/supabase/server";
 import { redirect } from "next/navigation";
 import { SubmitButton } from "./submit-button";
-
+import img from "../assets/image.png"
 export default function Login({
   searchParams,
 }: {
@@ -105,7 +105,7 @@ export default function Login({
           </div>
         </div>
         <div className="w-1/2 h-screen">
-          <img className="h-screen w-full" src="https://cdn.discordapp.com/attachments/730134376129626225/1240764478283583539/image.png?ex=664910f7&is=6647bf77&hm=c9700b758f2caef14616fe20dd859048452015749482343b4013dd72e57a7d09&"></img>
+          <img className="h-screen w-full" src="/image.png"></img>
         </div>
       </div>
     </div>
