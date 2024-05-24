@@ -1,20 +1,34 @@
-"use client"
-
+"use client";
 
 import DashIcon from "./icons/DashIcon";
 import UsersIcon from "./icons/UsersIcon";
 import RoutesIcon from "./icons/RoutesIcon";
+import BusIcon from "./icons/BusIcon";
+import TrainIcon from "./icons/TrainIcon";
+import TaxiIcon from "./icons/TaxiIcon";
 import Link from "next/link";
 import { useEffect, useState } from "react";
+import { redirect } from "next/navigation";
+import { AirportShuttle } from "@mui/icons-material";
 
-export default  function ProtectedPage() {
-  const [selected2, setSelected] = useState(localStorage.getItem("selected2") || "dashboard");
-
-  
+export default function ProtectedPage() {
+  const [selected2, setSelected] = useState(
+    localStorage.getItem("selected2") || "dashboard"
+  );
 
   const handleSelect = (value: string) => {
     setSelected(value);
     localStorage.setItem("selected2", value);
+    setSelected3("");
+  };
+
+  const [selected3, setSelected3] = useState(
+   ""
+  );
+
+  const handleSelect2 = (value: string) => {
+    setSelected3(value);
+    
   };
 
   return (
@@ -26,50 +40,126 @@ export default  function ProtectedPage() {
       </header>
       <hr className="h-[1px] w-full bg-[#E4E4E4]"></hr>
 
-      <nav className="flex flex-col pl-5  w-full text-base font-medium tracking-tight leading-8 text-gray-900 whitespace-nowrap">
-        <Link href={"/protected"} onClick={()=> {handleSelect("dashboard")}}>
+      <nav className="flex flex-col pl-5 gap-5 w-full text-[#76787e] ">
+        <Link
+          href={"/protected"}
+          onClick={() => {
+            handleSelect("dashboard");
+          }}
+        >
           {selected2 === "dashboard" ? (
-            <div className="flex flex-row gap-5 py-1 mt-5 items-center">
+            <div className="flex flex-row gap-5 py-1 items-center">
               <hr className="h-[36px] w-[4px] bg-[#24BAEC] left-0 absolute"></hr>
               <DashIcon color="#24BAEC" />
-              <span>Dashboard</span>
+              <span className="text-black">Dashboard</span>
             </div>
           ) : (
-            <div className="flex flex-row gap-5 py-1 mt-5 items-center">
-              <DashIcon color="#1B1E28" />
+            <div className="flex flex-row gap-5 py-1 items-center">
+              <DashIcon color="#76787e" />
               <span>Dashboard</span>
             </div>
           )}
         </Link>
 
-        <Link href={"/protected/users"} onClick={()=> {handleSelect("users")}}>
+        <Link
+          href={"/protected/users"}
+          onClick={() => {
+            handleSelect("users");
+          }}
+        >
           {selected2 === "users" ? (
-            <div className="flex flex-row gap-5 py-1 mt-5 items-center">
+            <div className="flex flex-row gap-5 py-1 items-center">
               <hr className="h-[36px] w-[4px] bg-[#24BAEC] left-0 absolute"></hr>
               <UsersIcon color="#24BAEC" />
-              <span>Users</span>
+              <span className="text-black">Users</span>
             </div>
           ) : (
-            <div className="flex flex-row gap-5 py-1 mt-5 items-center">
-              <UsersIcon color="#1B1E28" />
+            <div className="flex flex-row gap-5 py-1 items-center">
+              <UsersIcon color="#76787e" />
               <span>Users</span>
             </div>
           )}
         </Link>
-        <Link href={"/protected/routes"} onClick={()=> {handleSelect("routes")}}>
+        <Link
+          href={"/protected/routes"}
+          onClick={() => {
+            handleSelect("routes");
+          }}
+        >
           {selected2 === "routes" ? (
-            <div className="flex flex-row gap-5 py-1 mt-5 items-center">
+            <div className="flex flex-row gap-5 py-1 items-center">
               <hr className="h-[36px] w-[4px] bg-[#24BAEC] left-0 absolute"></hr>
               <RoutesIcon color="#24BAEC" />
-              <span>Routes</span>
+              <span className="text-black">Routes</span>
             </div>
           ) : (
-            <div className="flex flex-row gap-5 py-1 mt-5 items-center">
-              <RoutesIcon color="#1B1E28" />
+            <div className="flex flex-row gap-5 py-1 items-center">
+              <RoutesIcon color="#76787e" />
               <span>Routes</span>
             </div>
           )}
         </Link>
+        {selected2 === "routes" ? (
+          <div>
+            <Link href={"/protected/routes/buses"}
+          onClick={() => {
+            handleSelect2("buses");
+          }}>
+            {selected3 === "buses" ? (
+            <div className="flex flex-row gap-5 pl-5 py-1 items-center">
+              <BusIcon color="#24BAEC"></BusIcon>
+              <span className="text-[#76787e] text-[14px]">Buses</span>
+            </div>
+            )
+            :(
+              <div className="flex flex-row gap-5 pl-5 py-1 items-center">
+              <BusIcon color="#76787e"></BusIcon>
+              <span className="text-[#76787e] text-[14px]">Buses</span>
+            </div>
+            )}
+            </Link>
+
+            <Link href={"/protected/routes/trains"}
+          onClick={() => {
+            handleSelect2("trains");
+          }}>
+            {selected3 === "trains" ? (
+            <div className="flex flex-row gap-5 pl-5 py-1 items-center">
+              <TrainIcon color="#24BAEC"></TrainIcon>
+              <span className="text-[#76787e] text-[14px]">Trains</span>
+            </div>
+            )
+            :(
+              <div className="flex flex-row gap-5 pl-5 py-1 items-center">
+              <TrainIcon color="#76787e"></TrainIcon>
+              <span className="text-[#76787e] text-[14px]">Trains</span>
+            </div>
+            )}
+            </Link>
+
+            <Link href={"/protected/routes/taxis"}
+          onClick={() => {
+            handleSelect2("taxis");
+          }}>
+            {selected3 === "taxis" ? (
+            <div className="flex flex-row gap-5 pl-5 py-1 items-center">
+              <TaxiIcon color="#24BAEC"></TaxiIcon>
+              <span className="text-[#76787e] text-[14px]">Taxis</span>
+            </div>
+            )
+            :(
+              <div className="flex flex-row gap-5 pl-5 py-1 items-center">
+              <TaxiIcon color="#76787e"></TaxiIcon>
+              <span className="text-[#76787e] text-[14px]">Taxis</span>
+            </div>
+            )}
+            </Link>
+            
+            
+          </div>
+        ) : (
+          <></>
+        )}
       </nav>
     </section>
   );
