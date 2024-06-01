@@ -3,33 +3,50 @@
 import DashIcon from "./icons/DashIcon";
 import UsersIcon from "./icons/UsersIcon";
 import RoutesIcon from "./icons/RoutesIcon";
-import BusIcon from "./icons/BusIcon";
-import TrainIcon from "./icons/TrainIcon";
-import TaxiIcon from "./icons/TaxiIcon";
+import CitiesIcon from "./icons/CitiesIcon";
+
 import Link from "next/link";
 import { useEffect, useState } from "react";
-import { redirect } from "next/navigation";
-import { AirportShuttle } from "@mui/icons-material";
 
-export default function ProtectedPage() {
-  const [selected2, setSelected] = useState(
-    localStorage.getItem("selected2") || "dashboard"
-  );
+import { useRouter } from "next/navigation";
 
+export default function Sidebar() {
+
+  const [selected2, setSelected] = useState("dashboard");
+    
+ 
+    
   const handleSelect = (value: string) => {
     setSelected(value);
     localStorage.setItem("selected2", value);
-    setSelected3("");
-  };
-
-  const [selected3, setSelected3] = useState(
-   ""
-  );
-
-  const handleSelect2 = (value: string) => {
-    setSelected3(value);
     
   };
+
+ 
+
+  
+
+  const router = useRouter();
+
+  useEffect(() => {
+    // Initialize the selected state from localStorage
+    const savedSelected2 = localStorage.getItem("selected2");
+    
+    if (savedSelected2) {
+      setSelected(savedSelected2);
+      if (savedSelected2 === "users") {
+        router.push("/protected/users");
+      } else if (savedSelected2 === "routes" ) {
+        
+        router.push(`/protected/routes`);
+      }
+      else if (savedSelected2 === "cities" ) {
+        
+        router.push(`/protected/cities`);
+      }
+      
+    }
+  }, []);
 
   return (
     <section className="flex flex-col self-stretch pt-14 pb-5 gap-10 bg-white h-screen min-w-[280px]">
@@ -80,6 +97,27 @@ export default function ProtectedPage() {
             </div>
           )}
         </Link>
+
+        <Link
+          href={"/protected/cities"}
+          onClick={() => {
+            handleSelect("cities");
+          }}
+        >
+          {selected2 === "cities" ? (
+            <div className="flex flex-row gap-5 py-1 items-center">
+              <hr className="h-[36px] w-[4px] bg-[#24BAEC] left-0 absolute"></hr>
+              <CitiesIcon color="#24BAEC" />
+              <span className="text-black">Cities</span>
+            </div>
+          ) : (
+            <div className="flex flex-row gap-5 py-1 items-center">
+              <CitiesIcon color="#76787e" />
+              <span>Cities</span>
+            </div>
+          )}
+        </Link>
+
         <Link
           href={"/protected/routes"}
           onClick={() => {
@@ -99,67 +137,7 @@ export default function ProtectedPage() {
             </div>
           )}
         </Link>
-        {selected2 === "routes" ? (
-          <div>
-            <Link href={"/protected/routes/buses"}
-          onClick={() => {
-            handleSelect2("buses");
-          }}>
-            {selected3 === "buses" ? (
-            <div className="flex flex-row gap-5 pl-5 py-1 items-center">
-              <BusIcon color="#24BAEC"></BusIcon>
-              <span className="text-[#76787e] text-[14px]">Buses</span>
-            </div>
-            )
-            :(
-              <div className="flex flex-row gap-5 pl-5 py-1 items-center">
-              <BusIcon color="#76787e"></BusIcon>
-              <span className="text-[#76787e] text-[14px]">Buses</span>
-            </div>
-            )}
-            </Link>
-
-            <Link href={"/protected/routes/trains"}
-          onClick={() => {
-            handleSelect2("trains");
-          }}>
-            {selected3 === "trains" ? (
-            <div className="flex flex-row gap-5 pl-5 py-1 items-center">
-              <TrainIcon color="#24BAEC"></TrainIcon>
-              <span className="text-[#76787e] text-[14px]">Trains</span>
-            </div>
-            )
-            :(
-              <div className="flex flex-row gap-5 pl-5 py-1 items-center">
-              <TrainIcon color="#76787e"></TrainIcon>
-              <span className="text-[#76787e] text-[14px]">Trains</span>
-            </div>
-            )}
-            </Link>
-
-            <Link href={"/protected/routes/taxis"}
-          onClick={() => {
-            handleSelect2("taxis");
-          }}>
-            {selected3 === "taxis" ? (
-            <div className="flex flex-row gap-5 pl-5 py-1 items-center">
-              <TaxiIcon color="#24BAEC"></TaxiIcon>
-              <span className="text-[#76787e] text-[14px]">Taxis</span>
-            </div>
-            )
-            :(
-              <div className="flex flex-row gap-5 pl-5 py-1 items-center">
-              <TaxiIcon color="#76787e"></TaxiIcon>
-              <span className="text-[#76787e] text-[14px]">Taxis</span>
-            </div>
-            )}
-            </Link>
-            
-            
-          </div>
-        ) : (
-          <></>
-        )}
+        
       </nav>
     </section>
   );

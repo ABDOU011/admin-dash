@@ -12,7 +12,7 @@ import {
 } from "@/app/protected/users/actions/actions";
 import { BarChart } from "@mui/x-charts";
 
-export default function ROverview({}: {}) {
+export default function COverview({}: {}) {
   const xLabels = [
     "Jan",
     "Feb",

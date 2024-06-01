@@ -1,8 +1,10 @@
 {
   "compilerOptions": {
     "target": "es5",
+    "useUnknownInCatchVariables": false,
     "lib": ["dom", "dom.iterable", "esnext"],
     "allowJs": true,
+    "downlevelIteration": true,
     "skipLibCheck": true,
     "strict": true,
     "forceConsistentCasingInFileNames": true,

@@ -1,20 +1,23 @@
-"use client"
-import ROverview from "@/components/ROverview";
-import { useEffect, useState } from "react";
-import { signout } from "../users/actions/actions";
-import LogoutOutlinedIcon from '@mui/icons-material/LogoutOutlined';
-import RouteTable from "@/components/RouteTable";
+"use client";
 
-export default function routes() {
-    const [selected, setSelected] = useState("overview");
+import React ,{ useEffect, useState } from "react";
+import { signout } from "../users/actions/actions";
+import LogoutOutlinedIcon from "@mui/icons-material/LogoutOutlined";
+
+import COverview from "@/components/COverview";
+import CityTable from "@/components/CityTable";
+import NewCity from "@/components/NewCity";
+
+export default function cities() {
+  const [selected, setSelected] = useState("overview");
 
   const handleSelect = (value: string) => {
     setSelected(value);
-    localStorage.setItem("selected3", value);
+    localStorage.setItem("selected4", value);
   };
 
   useEffect(() => {
-    const savedSelected2 = localStorage.getItem("selected3");
+    const savedSelected2 = localStorage.getItem("selected4");
     if (savedSelected2) {
       setSelected(savedSelected2);
     }
@@ -23,7 +26,7 @@ export default function routes() {
   return (
     <div className="bg-[#F4F7FE] w-full flex flex-col items-start">
       <div className="flex flex-row items-center justify-between p-[24px] w-full">
-        <nav className="flex flex-row justify-center items-center gap-[56px] w-[554px] h-[24px]">
+        <nav className="flex flex-row pl-7 items-center gap-[56px] w-[554px] h-[24px]">
           {selected === "overview" ? (
             <button
               onClick={() => handleSelect("overview")}
@@ -54,19 +57,19 @@ export default function routes() {
               Table
             </button>
           )}
-          {selected === "createnew" ? (
+          {selected === "addcity" ? (
             <button
-              onClick={() => handleSelect("createnew")}
+              onClick={() => handleSelect("addcity")}
               className="font-['SF_Compact_Display'] font-medium text-[20px] text-[#24BAEC] "
             >
-              Create New
+              Add City
             </button>
           ) : (
             <button
-              onClick={() => handleSelect("createnew")}
+              onClick={() => handleSelect("addcity")}
               className="font-['SF_Compact_Display'] font-medium text-[20px] text-[#1B1E28] opacity-50"
             >
-              Create New
+              Add City
             </button>
           )}
         </nav>
@@ -81,17 +84,16 @@ export default function routes() {
           </button>
         </div>
       </div>
-      {selected==="overview" ? (
-                <ROverview></ROverview>
-            )
-            
-            : selected==="table"?(
-                <RouteTable></RouteTable>
-            )
-            :(
-                <></>
-            )
-            }
+      {selected === "overview" ? (
+        <COverview/>
+      ) : selected === "table" ? (
+        <CityTable/>
+      ) : selected === "addcity" ? (
+        <NewCity></NewCity>
+      ):
+      (
+        <></>
+    )}
     </div>
   );
 }

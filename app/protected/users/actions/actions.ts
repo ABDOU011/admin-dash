@@ -89,6 +89,14 @@ try {
   
 }
 
+export async function signout() {
+  const supabase = createClient();
+  const {
+    
+  } = await supabase.auth.signOut();
+  
+}
+
 export async function updateUser(formData: FormData) {
   const id = formData.get("id") as string;
   const email = formData.get("email") as string;

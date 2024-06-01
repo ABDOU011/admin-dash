@@ -9,6 +9,8 @@ export default function Login({
 }: {
   searchParams: { message: string };
 }) {
+
+  
   const isAdmin = async (id: string | undefined) => {
     "use server";
     const supabase = createClient();
@@ -31,14 +33,23 @@ export default function Login({
     const supabase = createClient();
     const email = formData.get("email") as string;
     const password = formData.get("password") as string;
+    const remember = formData.get("rememberme") as string;
+    let rememberMe= false
+    if (remember === "on") {
+      rememberMe = true;
+    }
+
+    const sessionDuration = rememberMe ? 60 * 60 * 24 * 30 : 60 * 60 * 24; 
 
     const { data, error } = await supabase.auth.signInWithPassword({
       email,
       password,
+      
+      
     });
 
     if (error) {
-      return redirect("/login?message=Could not authenticate user");
+      return redirect("/?message=Could not authenticate user");
     }
 
     const userId = data?.user?.id;
@@ -46,7 +57,7 @@ export default function Login({
       return redirect("/protected");
     } else {
       await supabase.auth.signOut();
-      return redirect("/login?message=Could not authenticate user");
+      return redirect("/login?message= Error Could not authenticate user");
     }
   };
 
@@ -88,6 +99,16 @@ export default function Login({
                   required
                 />
               </div>
+              <label className="text-md text-black">
+              
+                <input name="rememberme" type="checkbox"   />
+                 <span>    </span>   Remember me
+              </label>
+              {searchParams?.message && (
+                <p className="mt-4 p-4 text-red-700 text-center">
+                  {searchParams.message}
+                </p>
+              )}
               <SubmitButton
                 formAction={signIn}
                 className="bg-[#24BAEC] w-full rounded-2xl px-4 py-2 text-foreground mb-2"
@@ -96,11 +117,7 @@ export default function Login({
                 Sign In
               </SubmitButton>
 
-              {searchParams?.message && (
-                <p className="mt-4 p-4 bg-foreground/10 text-foreground text-center">
-                  {searchParams.message}
-                </p>
-              )}
+              
             </form>
           </div>
         </div>
