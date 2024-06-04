@@ -111,12 +111,7 @@ export default function City(): JSX.Element {
           />
         </div>
         <div className="flex flex-row justify-end items-center px-[24px] py-0 gap-[16px] w-full">
-          <button
-            className="w-[240px] h-[56px] bg-[#24BAEC] rounded-[16px]"
-            onClick={() => router.push(`/protected/cities/hotspot?id=${i}`)}
-          >
-            Add Hotspot
-          </button>
+          
           <button
             className="w-[240px] h-[56px] bg-[#24BAEC] rounded-[16px]"
             onClick={() => handleOpenModal()}

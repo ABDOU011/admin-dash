@@ -28,23 +28,16 @@ export default function NewCity({ cityId }: NewCityProps) {
     const [provenance, setProvenance] = useState<{id?:number,name:string, numstreet:number}[]>([{ name: '', numstreet:0 }])
     const [streets, setStreets] = useState<{[key: number]: {id?:number, name: string, numberOfStops: number }[] }>({});
     const [stops, setStops] = useState<{ [key: string]: {id?:number, longitude: number, latitude: number }[] }>({});
-    const [hotspot, setHotspot] = useState<{id?:number,name:string, image:string|null,place:number}[] >([{ name: '', image: null, place: 0 }]);
+    const [hotspot, setHotspot] = useState<{id?:number,name:string, image:string|null,place:number|string}[] >([{ name: '', image: null, place: 0 }]);
     const router = useRouter()
     
     useEffect(() => {
       if (cityId) {
         // Fetch existing city data for update
-        fetchCityData(cityId).then((data) => {
-          setCity(data.city);
-          setProvenance(data.provenances);
-          setStreets(data.streets);
-          setStops(data.stops)
-        }).catch((error) => {
-          console.error("Error fetching city data:", error);
-          toast.error("Error fetching city data");
-        });
+        fetchData(cityId);
       }
     }, [cityId]);
+
 
     const handleNextSegment = () => {
       if (currentSegment === 'City') setCurrentSegment('Provenances');
@@ -59,6 +52,18 @@ export default function NewCity({ cityId }: NewCityProps) {
       if (currentSegment === 'Streets') setCurrentSegment('Provenances');
       if (currentSegment === 'Provenances') setCurrentSegment('City');
     };
+    const fetchData = async (cityId: string ) => {
+      await fetchCityData(cityId!).then((data) => {
+        setCity(data.city);
+        setProvenance(data.provenances);
+        setStreets(data.streets);
+        setStops(data.stops)
+        setHotspot(data.hotspots)
+      }).catch((error) => {
+        console.error("Error fetching city data:", error);
+        toast.error("Error fetching city data");
+      });
+    }
 
     
 
@@ -91,7 +96,7 @@ export default function NewCity({ cityId }: NewCityProps) {
           
         }
         else{ 
-        await save(city,provenance,streets,stops);
+        await save(city,provenance,streets,stops,hotspot);
         toast.success("city added");
       } 
         
@@ -150,7 +155,7 @@ export default function NewCity({ cityId }: NewCityProps) {
           >
             Previous
           </button>
-          {currentSegment==="Stops"
+          {currentSegment==="Hotspots"
             ? (
               <button
             className="flex flex-row justify-center items-center p-0 w-1/2 gap-[10px] mx-[auto] my-[0] h-[56px] bg-[#24BAEC] rounded-[16px]"

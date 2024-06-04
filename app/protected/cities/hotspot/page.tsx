@@ -76,15 +76,7 @@ export default function NewHotspot() {
           if (error) {
             console.log(error.message);
             return;
-          } else {
-              const { data, error } = await supabase
-              .from("stops")
-              .update({ hotspots: hId })
-              .eq("place", stop.id);
-              if(error){
-                console.log(error?.message)
-              }
-            }
+          } 
                 
         }
         const { data:bucket, error:bucketer } = await supabase.storage

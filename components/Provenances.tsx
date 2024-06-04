@@ -1,5 +1,8 @@
 import { deleteProv } from "@/app/protected/cities/actions";
 import { useState } from "react";
+import Modal from 'react-modal';
+import { ToastContainer, toast } from "react-toastify";
+
 
 interface ProvenancesProps {
   provenances: {id?:number, name: string; numstreet: number }[];
@@ -27,6 +30,17 @@ const Provenances: React.FC<ProvenancesProps> = ({
     const updatedProvenances = [...provenances];
     updatedProvenances[index] = { ...updatedProvenances[index], [name]: value };
     setProvenance(updatedProvenances);
+  };
+  const [open, setOpen] = useState(false);
+  const [UserId, setUserId] = useState('');
+
+  const handleClickOpen = (userId:string) => {
+    setUserId(userId);
+    setOpen(true);
+  };
+
+  const handleClose = () => {
+    setOpen(false);
   };
 
   const handleAddProvenance = () => {
@@ -84,10 +98,49 @@ const Provenances: React.FC<ProvenancesProps> = ({
             />
           </div>
           {
-            provenance.id ? (
-              <button onClick={()=>{handleRemoveProvenance(index,provenance?.id)}} className="text-black">
+            provenance.id ? (<div>
+              <button onClick={()=>{handleClickOpen(provenance.id!.toString())}} className="text-black mt-10">
         Delete
       </button>
+      <Modal
+        isOpen={open}
+        onRequestClose={handleClose}
+        contentLabel="Edit User Modal"
+        style={{
+          content: {
+            top: "50%",
+            left: "50%",
+            right: "auto",
+            bottom: "auto",
+            width: "400px",
+            height: "250px",
+            marginRight: "-125px",
+            marginBottom: "-75px",
+            transform: "translate(-50%, -50%)",
+          },
+        }}
+      >
+        <div className="flex flex-col justify-center items-center gap-[24px] w-[350px] h-[200px]  rounded-[16px] p-[24px]">
+          <h1 className="text-black text-[14px] font-bold">Are you sure you want to permanently delete it?</h1>
+          <div className="flex flex-row items-end justify-end w-full gap-2">
+            <button onClick={handleClose} className="flex flex-row justify-center items-center p-0 gap-[10px] w-[120px] h-[56px] text-black border-[1px] border-[solid] border-[#E4E4E4] rounded-[16px]">Cancel</button>
+            <button onClick={() => {
+                  try {
+                    handleRemoveProvenance(index,provenance?.id);
+                    
+                    handleClose();
+                    toast.success("provenance deleted");
+                  } catch (error) {
+                    toast.error("error occured check console");
+                  }
+                }} className="flex flex-row justify-center items-center p-0 gap-[10px] w-[120px] h-[56px] bg-[#DE1C1C] rounded-[16px]">
+              Confirm
+            </button>
+          </div>
+        </div>
+        <ToastContainer />
+      </Modal>
+      </div>
             ):
              (
               <></>
@@ -99,6 +152,8 @@ const Provenances: React.FC<ProvenancesProps> = ({
       <button onClick={handleAddProvenance} className="text-black">
         Add New Provenance
       </button>
+      
+      
     </div>
   );
 };
