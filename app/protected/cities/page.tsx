@@ -8,21 +8,29 @@ import COverview from "@/components/COverview";
 import CityTable from "@/components/CityTable";
 import NewCity from "@/components/NewCity";
 
-export default function cities() {
-  const [selected, setSelected] = useState("overview");
 
+export default function Cities() {
+  const [selected, setSelected] = useState("overview");
+  const [city, setcity] = useState<string | null>(null);
   const handleSelect = (value: string) => {
     setSelected(value);
     localStorage.setItem("selected4", value);
   };
-
+  
   useEffect(() => {
     const savedSelected2 = localStorage.getItem("selected4");
     if (savedSelected2) {
       setSelected(savedSelected2);
     }
+    
   }, []);
 
+  
+    
+    
+ 
+    
+  
   return (
     <div className="bg-[#F4F7FE] w-full flex flex-col items-start">
       <div className="flex flex-row items-center justify-between p-[24px] w-full">
@@ -84,14 +92,15 @@ export default function cities() {
           </button>
         </div>
       </div>
+      
       {selected === "overview" ? (
         <COverview/>
       ) : selected === "table" ? (
         <CityTable/>
       ) : selected === "addcity" ? (
         <NewCity></NewCity>
-      ):
-      (
+      )
+      :(
         <></>
     )}
     </div>

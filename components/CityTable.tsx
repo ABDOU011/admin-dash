@@ -5,12 +5,15 @@ import MUIDataTable from "mui-datatables";
 import Modal from "react-modal";
 import DeleteIcon from "@mui/icons-material/Delete";
 import EditIcon from "@mui/icons-material/Edit";
+import VisibilityIcon from '@mui/icons-material/Visibility';
 import { createTheme, ThemeProvider } from "@mui/material/styles";
 
 import { deleteCity, getCities } from "@/app/protected/cities/actions";
 import { ToastContainer, toast } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
 import NewCity from "./NewCity";
+import {  useRouter } from "next/navigation";
+
 
 export default function CityTable({}: {}) {
   const [daat, setData] = useState<(object | string[] | number[])[]>([]);
@@ -37,6 +40,8 @@ export default function CityTable({}: {}) {
   useEffect(() => {
     fetchData();
   }, []);
+
+  const router = useRouter()
 
   const columns = [
     {
@@ -82,6 +87,9 @@ export default function CityTable({}: {}) {
               </button>
               <button onClick={() => handleOpenModal(value)}>
                 <EditIcon style={{ height: 24, width: 24 }}></EditIcon>
+              </button>
+              <button onClick={() => router.push(`/protected/cities/city?id=${value}`)}>
+                <VisibilityIcon style={{ height: 24, width: 24 }}></VisibilityIcon>
               </button>
             </div>
           );
@@ -139,7 +147,6 @@ export default function CityTable({}: {}) {
         onRequestClose={handleCloseModal}
         contentLabel="Edit User Modal"
       >
-        
           <h1 className="font-medium text-[20px] text-[#1B1E28]">Edit city</h1>
           <NewCity cityId={SelectedCity}></NewCity>
           <div className="flex flex-row justify-between w-full">

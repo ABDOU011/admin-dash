@@ -1,5 +1,6 @@
 "use server"
 import { createClient } from "@/utils/supabase/server";
+import { data } from "autoprefixer";
 
 export async function save(city:any,prov:any,streets:any,stops:any){
     const supabase = createClient();
@@ -40,13 +41,7 @@ export async function save(city:any,prov:any,streets:any,stops:any){
             console.log(error.message)
           }
           }
-   
-
       }
-
-    
-    
-    
   }
 
   
@@ -54,9 +49,11 @@ export async function save(city:any,prov:any,streets:any,stops:any){
 
   
 
-  export async function update(city:any,prov:any,streets:any,stops:any) {
+  export async function update(city:any,prov:any,streets:any,stops:any,hotspot:any) {
+    
     const supabase = createClient()
     try {
+      console.log(hotspot)
       const provadd: {id?:number,name:string, numstreet:number}[]=[]
       const streetadd: { [key: number]: { id?: number, name: string, numberOfStops: number }[] } = {};
       const stopadd: { [key: string]: {id?:number, longitude: number, latitude: number }[] } = {};
@@ -474,6 +471,32 @@ export async function deleteStop(Id: string) {
 
 }
 
+
+export async function fetchStops(id:any) {
+  const supabase = createClient()
+
+  // Start a transaction
+  try {
+    
+  const { data,error: stopsError } = await supabase
+    .from('places')
+    .select('*')
+    .eq('city', id);
+    
+  if (stopsError) {
+    console.log('Error deleting stops:', stopsError.message);
+    return;
+  }
+  const result = data.map(({ id, street }) => ({ id, label: street }));
+  
+  return result;
+  
+  } catch (error) {
+    return  error
+  }
+  
+}
+
 export async function fetchCityData(cityId: string) {
   const supabase = createClient(); // assuming you have a Supabase client instance
 
@@ -575,15 +598,4 @@ const stops = Object.keys(streetsGroupedByProvenance).reduce((acc: any, provenan
   }
 }
 
-type Street = {
-  id?: number;
-  name: string;
-  numberOfStops: number;
-};
-
-type Stop = {
-  id?: number;
-  longitude: number;
-  latitude: number;
-};
 

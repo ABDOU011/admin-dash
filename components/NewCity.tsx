@@ -28,6 +28,7 @@ export default function NewCity({ cityId }: NewCityProps) {
     const [provenance, setProvenance] = useState<{id?:number,name:string, numstreet:number}[]>([{ name: '', numstreet:0 }])
     const [streets, setStreets] = useState<{[key: number]: {id?:number, name: string, numberOfStops: number }[] }>({});
     const [stops, setStops] = useState<{ [key: string]: {id?:number, longitude: number, latitude: number }[] }>({});
+    const [hotspot, setHotspot] = useState<{id?:number,name:string, image:string|null,place:number}[] >([{ name: '', image: null, place: 0 }]);
     const router = useRouter()
     
     useEffect(() => {
@@ -49,16 +50,18 @@ export default function NewCity({ cityId }: NewCityProps) {
       if (currentSegment === 'City') setCurrentSegment('Provenances');
       if (currentSegment === 'Provenances') setCurrentSegment('Streets');
       if (currentSegment === 'Streets') setCurrentSegment('Stops');
-      
+      if (currentSegment === 'Stops') setCurrentSegment('Hotspots');
     };
     
     const handlePreviousSegment = () => {
-      
+      if (currentSegment === 'Hotspots') setCurrentSegment('Stops');
       if (currentSegment === 'Stops') setCurrentSegment('Streets');
       if (currentSegment === 'Streets') setCurrentSegment('Provenances');
       if (currentSegment === 'Provenances') setCurrentSegment('City');
     };
-   
+
+    
+
     const renderSegment = () => {
       switch (currentSegment) {
         case 'City':
@@ -72,18 +75,20 @@ export default function NewCity({ cityId }: NewCityProps) {
           return provenance !== null &&  <Streets provenances={provenance} streets={streets} setStreets={setStreets} />;
         case 'Stops':
           return <Stops provenances={provenance} streets={streets} stops={stops} setStops={setStops}/>;
+        case 'Hotspots':
+          return <HotSpots hotspot={hotspot} setHotspot={setHotspot} streets= {streets} provenances={provenance}></HotSpots>
         default:
           return <CityForm setCity={setCity} city={city} />;
       }
     };
-    console.log("streets",streets)
-    console.log("stops",stops)
+    
     const handleSubmit = async () => {
       try {
         if (cityId) {
-          // Update existing city
-          await update( city, provenance, streets, stops);
+          
+          await update( city, provenance, streets, stops,hotspot);
           toast.success("City updated");
+          
         }
         else{ 
         await save(city,provenance,streets,stops);
@@ -91,6 +96,7 @@ export default function NewCity({ cityId }: NewCityProps) {
       } 
         
       } catch (error) {
+        console.log(error)
         toast.error("error occured check console");
       }
       
@@ -101,32 +107,39 @@ export default function NewCity({ cityId }: NewCityProps) {
       <div className="flex flex-col justify-between items-start px-0 py-[24px] w-[306px] h-[534px]">
         <div className="flex flex-col items-start px-[24px] py-0 gap-[8px] mx-[auto] my-[0]">
           <div
-            className={`flex flex-row items-center pl-[12px] pr-[80px] py-[12px] gap-[8px] h-[38px] rounded-[8px] ${currentSegment === 'City' ? 'bg-[#24BAEC]' : 'bg-[#F4F7FE]'}`}
+            className={`flex flex-row items-center pl-[12px] pr-[80px] py-[12px] w-full gap-[8px] h-[38px] rounded-[8px] ${currentSegment === 'City' ? 'bg-[#24BAEC]' : 'bg-[#F4F7FE]'}`}
             onClick={() => setCurrentSegment('City')}
           >
             <City color={currentSegment === 'City' ? 'white' : 'black'} />
             <p className={`text-[14px] ${currentSegment === 'City' ? 'text-white' : 'text-black'}`}>City Information</p>
           </div>
           <div
-            className={`flex flex-row items-center pl-[12px] pr-[80px] py-[12px] gap-[8px] h-[38px] rounded-[8px] ${currentSegment === 'Provenances' ? 'bg-[#24BAEC]' : 'bg-[#F4F7FE]'}`}
+            className={`flex flex-row items-center pl-[12px] pr-[80px] py-[12px] w-full gap-[8px] h-[38px] rounded-[8px] ${currentSegment === 'Provenances' ? 'bg-[#24BAEC]' : 'bg-[#F4F7FE]'}`}
             onClick={() => setCurrentSegment('Provenances')}
           >
             <Provenance color={currentSegment === 'Provenances' ? 'white' : 'black'} />
             <p className={`text-[14px] ${currentSegment === 'Provenances' ? 'text-white' : 'text-black'}`}>Provenances</p>
           </div>
           <div
-            className={`flex flex-row items-center pl-[12px] pr-[80px] py-[12px] gap-[8px] h-[38px] rounded-[8px] ${currentSegment === 'Streets' ? 'bg-[#24BAEC]' : 'bg-[#F4F7FE]'}`}
+            className={`flex flex-row items-center pl-[12px] pr-[80px] py-[12px] w-full gap-[8px] h-[38px] rounded-[8px] ${currentSegment === 'Streets' ? 'bg-[#24BAEC]' : 'bg-[#F4F7FE]'}`}
             onClick={() => setCurrentSegment('Streets')}
           >
             <Street color={currentSegment === 'Streets' ? 'white' : 'black'} />
             <p className={`text-[14px] ${currentSegment === 'Streets' ? 'text-white' : 'text-black'}`}>Streets</p>
           </div>
           <div
-            className={`flex flex-row items-center pl-[12px] pr-[80px] py-[12px] gap-[8px] h-[38px] rounded-[8px] ${currentSegment === 'Stops' ? 'bg-[#24BAEC]' : 'bg-[#F4F7FE]'}`}
+            className={`flex flex-row items-center pl-[12px] pr-[80px] py-[12px] w-full gap-[8px] h-[38px] rounded-[8px] ${currentSegment === 'Stops' ? 'bg-[#24BAEC]' : 'bg-[#F4F7FE]'}`}
             onClick={() => setCurrentSegment('Stops')}
           >
             <StopsIcon color={currentSegment === 'Stops' ? 'white' : 'black'} />
             <p className={`text-[14px] ${currentSegment === 'Stops' ? 'text-white' : 'text-black'}`}>Stops</p>
+          </div>
+          <div
+            className={`flex flex-row items-center pl-[12px] pr-[80px] py-[12px] w-full gap-[8px] h-[38px] rounded-[8px] ${currentSegment === 'Hotspots' ? 'bg-[#24BAEC]' : 'bg-[#F4F7FE]'}`}
+            onClick={() => setCurrentSegment('Hotspots')}
+          >
+            <Hotspot color={currentSegment === 'Hotspots' ? 'white' : 'black'} />
+            <p className={`text-[14px] ${currentSegment === 'Hotspots' ? 'text-white' : 'text-black'}`}>Hotspots</p>
           </div>
           
         </div>
@@ -163,7 +176,7 @@ export default function NewCity({ cityId }: NewCityProps) {
 
       <div className="w-0 h-[534px] border-[1px] border-[solid] border-[#E4E4E4]" />
 
-      <div className="w-[600px]">{renderSegment()}</div>
+      <div className="w-[600px] text-black">{renderSegment()}</div>
       <ToastContainer  />
     </div>
   );
