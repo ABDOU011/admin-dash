@@ -1,6 +1,6 @@
 "use client";
 
-import { useEffect, useRef, useState } from "react";
+import React,{ useEffect, useRef, useState } from "react";
 import { ToastContainer, toast } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
 import { deleteCity } from "@/app/protected/cities/actions";
@@ -14,25 +14,23 @@ import {
 } from "@/app/protected/users/actions/actions";
 import { BarChart } from "@mui/x-charts";
 import NewCity from "../../../../components/NewCity";
-import { useSearchParams } from "next/navigation";
+import { useSearchParams, useRouter } from "next/navigation";
 import ArrowBackIcon from "@mui/icons-material/ArrowBack";
-import { useRouter } from "next/navigation";
 
-export default function City({ cityId }: { cityId: number }) {
-  const [modalIsOpen, setModalIsOpen] = useState(false);
+export default function City(): JSX.Element {
+  const [modalIsOpen, setModalIsOpen] = useState<boolean>(false);
   const data = [14, 25, 33, 19, 15, 27, 24, 35, 31, 36, 38, 44];
-  const [newusers, setNewUsers] = useState<any>(0);
-  const [totalusers, setTotalUsers] = useState<any>(0);
-  const [linedata, setLineData] = useState<any>();
-  const [histo, setHistory] = useState<any>();
+  const [newusers, setNewUsers] = useState<number>(0);
+  const [totalusers, setTotalUsers] = useState<number>(0);
+  const [linedata, setLineData] = useState<number[] | undefined>(undefined);
+  const [histo, setHistory] = useState<number[] | undefined>(undefined);
   const maxCount = Math.max(...(linedata ? linedata : []));
   const router = useRouter();
   const searchParams = useSearchParams();
   const i = searchParams?.get("id");
 
   const fetchData = async () => {
-    const newU = await newUsers();
-    setNewUsers(newU);
+    
   };
 
   useEffect(() => {
@@ -52,7 +50,7 @@ export default function City({ cityId }: { cityId: number }) {
     "Nov",
     "Dec",
   ];
-  const handleOpenModal = async () => {
+  const handleOpenModal = () => {
     setModalIsOpen(true);
   };
 
@@ -88,7 +86,7 @@ export default function City({ cityId }: { cityId: number }) {
           </div>
           <div className="flex flex-col justify-center items-center p-0 gap-[8px]">
             <p className=" font-medium text-[16px] text-[#1B1E28] opacity-[0.56]">
-              Trasportation Health
+              trasportation Health
             </p>
             <p className=" font-semibold text-[20px] text-[#1B1E28]">XXX</p>
           </div>
@@ -128,11 +126,11 @@ export default function City({ cityId }: { cityId: number }) {
           <button
             onClick={() => {
               try {
-                deleteCity(i!);
+                deleteCity((i!));
                 fetchData();
                 toast.error("city deleted");
               } catch (error) {
-                toast.error("error occured check consol");
+                toast.error("error occured check console");
               }
             }}
             className="w-[240px] h-[56px] bg-[#BB0000] rounded-[16px]"
@@ -163,3 +161,4 @@ export default function City({ cityId }: { cityId: number }) {
     </div>
   );
 }
+
