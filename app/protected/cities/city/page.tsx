@@ -18,7 +18,7 @@ import { useSearchParams } from "next/navigation";
 import ArrowBackIcon from "@mui/icons-material/ArrowBack";
 import { useRouter } from "next/navigation";
 
-export default function City({ cityId }: { cityId: string }) {
+export default function City({ cityId }: { cityId: number }) {
   const [modalIsOpen, setModalIsOpen] = useState(false);
   const data = [14, 25, 33, 19, 15, 27, 24, 35, 31, 36, 38, 44];
   const [newusers, setNewUsers] = useState<any>(0);
