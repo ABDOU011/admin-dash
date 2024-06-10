@@ -573,6 +573,69 @@ export async function fetchStops(id:any) {
   
 }
 
+export async function fetchCities() {
+  const supabase = createClient()
+  try { 
+  const { data,error: stopsError } = await supabase
+    .from('cities')
+    .select('*')
+  
+  if (stopsError) {
+    console.log('Error deleting stops:', stopsError.message);
+    return;
+  }
+  const result = data.map(({ id, name }) => ({ value: id, label: name }));
+  return result;
+  
+  } catch (error) {
+    return  error
+  }
+  
+}
+export async function fetchS(id:any) {
+  const supabase = createClient()
+
+  // Start a transaction
+  try {
+    
+  const { data,error: stopsError } = await supabase
+    .from('places')
+    .select('*')
+    .eq('city', id);
+    
+  if (stopsError) {
+    console.log('Error deleting stops:', stopsError.message);
+    return;
+  }
+  const result = data.map(place => place.id);
+  
+  const { data:stops,error: Error } = await supabase
+    .from('stops')
+    .select('*')
+    .in('place', result);
+    if(Error){
+      console.log(Error.message)
+    }
+    
+    const mergeArrays = (arr1: any[], arr2: any[]) => {
+      return arr2.map(item1 => {
+        const match = arr1.find(item2 => item1.place === item2.id);
+        return match ? { value:item1.id,label:match.street+' - '+item1.latitude+' - '+item1.longitude } : item1;
+      });
+    };
+    
+    const mergedArray = mergeArrays(data, stops!);
+    
+  
+    
+  return mergedArray;
+  
+  } catch (error) {
+    return  error
+  }
+  
+}
+
 export async function fetchCityData(cityId: string) {
   const supabase = createClient(); // assuming you have a Supabase client instance
 

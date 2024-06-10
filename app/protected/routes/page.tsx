@@ -4,6 +4,7 @@ import { useEffect, useState } from "react";
 import { signout } from "../users/actions/actions";
 import LogoutOutlinedIcon from '@mui/icons-material/LogoutOutlined';
 import RouteTable from "@/components/RouteTable";
+import NewRoute from "@/components/NewRoute";
 
 export default function routes() {
     const [selected, setSelected] = useState("overview");
@@ -27,14 +28,14 @@ export default function routes() {
           {selected === "overview" ? (
             <button
               onClick={() => handleSelect("overview")}
-              className="font-['SF_Compact_Display'] font-medium text-[20px] text-[#24BAEC] "
+              className=" font-medium text-[20px] text-[#24BAEC] "
             >
               Overview
             </button>
           ) : (
             <button
               onClick={() => handleSelect("overview")}
-              className="font-['SF_Compact_Display'] font-medium text-[20px] text-[#1B1E28] opacity-50"
+              className=" font-medium text-[20px] text-[#1B1E28] opacity-50"
             >
               Overview
             </button>
@@ -42,29 +43,29 @@ export default function routes() {
           {selected === "table" ? (
             <button
               onClick={() => handleSelect("table")}
-              className="font-['SF_Compact_Display'] font-medium text-[20px] text-[#24BAEC] "
+              className=" font-medium text-[20px] text-[#24BAEC] "
             >
-              Table
+              View Routes
             </button>
           ) : (
             <button
               onClick={() => handleSelect("table")}
-              className="font-['SF_Compact_Display'] font-medium text-[20px] text-[#1B1E28] opacity-50"
+              className=" font-medium text-[20px] text-[#1B1E28] opacity-50"
             >
-              Table
+              View Routes
             </button>
           )}
           {selected === "createnew" ? (
             <button
               onClick={() => handleSelect("createnew")}
-              className="font-['SF_Compact_Display'] font-medium text-[20px] text-[#24BAEC] "
+              className=" font-medium text-[20px] text-[#24BAEC] "
             >
               Create New
             </button>
           ) : (
             <button
               onClick={() => handleSelect("createnew")}
-              className="font-['SF_Compact_Display'] font-medium text-[20px] text-[#1B1E28] opacity-50"
+              className=" font-medium text-[20px] text-[#1B1E28] opacity-50"
             >
               Create New
             </button>
@@ -89,7 +90,7 @@ export default function routes() {
                 <RouteTable></RouteTable>
             )
             :(
-                <></>
+                <NewRoute></NewRoute>
             )
             }
     </div>

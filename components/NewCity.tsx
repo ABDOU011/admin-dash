@@ -109,7 +109,7 @@ export default function NewCity({ cityId }: NewCityProps) {
     };
   return (
     <div className="flex flex-row items-start pt-0 px-[24px] pb-[80px] gap-[40px] w-full">
-      <div className="flex flex-col justify-between items-start px-0 py-[24px] w-[306px] h-[534px]">
+      <div className="flex flex-col justify-between items-start px-0 py-[24px] w-[300px] h-[534px]">
         <div className="flex flex-col items-start px-[24px] py-0 gap-[8px] mx-[auto] my-[0]">
           <div
             className={`flex flex-row items-center pl-[12px] pr-[80px] py-[12px] w-full gap-[8px] h-[38px] rounded-[8px] ${currentSegment === 'City' ? 'bg-[#24BAEC]' : 'bg-[#F4F7FE]'}`}
@@ -181,7 +181,7 @@ export default function NewCity({ cityId }: NewCityProps) {
 
       <div className="w-0 h-[534px] border-[1px] border-[solid] border-[#E4E4E4]" />
 
-      <div className="w-[600px] text-black">{renderSegment()}</div>
+      <div className="w-[590px] text-black">{renderSegment()}</div>
       <ToastContainer  />
     </div>
   );

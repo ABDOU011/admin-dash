@@ -59,6 +59,8 @@ const Stops: React.FC<StopsProps> = ({ streets,stops, setStops,provenances }) =>
               <h3 className='text-black'>Street: {street.name}</h3>
               {stops[key]?.map((stop, stopIndex) => (
                 <div key={stopIndex} className="flex flex-row gap-3 pb-5">
+                  <div className="flex flex-col justify-center items-start gap-[4px] w-[440px]">
+                  <label className="text-black">Latitude</label>
                   <input
                     type="number"
                     name="longitude"
@@ -67,6 +69,10 @@ const Stops: React.FC<StopsProps> = ({ streets,stops, setStops,provenances }) =>
                     onChange={(e) => handleChange(key, stopIndex, e)}
                     className="text-black pl-4 w-full h-[50px] border-[1px] border-[solid] border-[#E4E4E4] rounded-[16px]"
                   />
+                  </div>
+                  
+                  <div className="flex flex-col justify-center items-start gap-[4px] w-[440px]">
+                  <label className="text-black">Longitude</label>
                   <input
                     type="number"
                     name="latitude"
@@ -75,6 +81,8 @@ const Stops: React.FC<StopsProps> = ({ streets,stops, setStops,provenances }) =>
                     onChange={(e) => handleChange(key, stopIndex, e)}
                     className="text-black pl-4 w-full h-[50px] border-[1px] border-[solid] border-[#E4E4E4] rounded-[16px]"
                   />
+                  </div>
+                  
                   {
             stop.id ? (
               <button onClick={() => handleRemoveStop(key, stopIndex,stop?.id)} className="text-black">

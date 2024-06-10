@@ -22,7 +22,7 @@ export default async function ProtectedPage() {
           
             <button
               
-              className="font-['SF_Compact_Display'] font-medium text-[20px] text-[#24BAEC] "
+              className=" font-medium text-[20px] text-[#24BAEC] "
             >
               Overview
             </button>

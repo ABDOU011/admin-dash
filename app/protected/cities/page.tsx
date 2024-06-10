@@ -38,14 +38,14 @@ export default function Cities() {
           {selected === "overview" ? (
             <button
               onClick={() => handleSelect("overview")}
-              className="font-['SF_Compact_Display'] font-medium text-[20px] text-[#24BAEC] "
+              className=" font-medium text-[20px] text-[#24BAEC] "
             >
               Overview
             </button>
           ) : (
             <button
               onClick={() => handleSelect("overview")}
-              className="font-['SF_Compact_Display'] font-medium text-[20px] text-[#1B1E28] opacity-50"
+              className=" font-medium text-[20px] text-[#1B1E28] opacity-50"
             >
               Overview
             </button>
@@ -53,29 +53,29 @@ export default function Cities() {
           {selected === "table" ? (
             <button
               onClick={() => handleSelect("table")}
-              className="font-['SF_Compact_Display'] font-medium text-[20px] text-[#24BAEC] "
+              className=" font-medium text-[20px] text-[#24BAEC] "
             >
-              Table
+              View Cities
             </button>
           ) : (
             <button
               onClick={() => handleSelect("table")}
-              className="font-['SF_Compact_Display'] font-medium text-[20px] text-[#1B1E28] opacity-50"
+              className=" font-medium text-[20px] text-[#1B1E28] opacity-50"
             >
-              Table
+              View Cities
             </button>
           )}
           {selected === "addcity" ? (
             <button
               onClick={() => handleSelect("addcity")}
-              className="font-['SF_Compact_Display'] font-medium text-[20px] text-[#24BAEC] "
+              className=" font-medium text-[20px] text-[#24BAEC] "
             >
               Add City
             </button>
           ) : (
             <button
               onClick={() => handleSelect("addcity")}
-              className="font-['SF_Compact_Display'] font-medium text-[20px] text-[#1B1E28] opacity-50"
+              className=" font-medium text-[20px] text-[#1B1E28] opacity-50"
             >
               Add City
             </button>

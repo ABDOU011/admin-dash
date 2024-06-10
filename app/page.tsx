@@ -70,7 +70,7 @@ export default function Login({
               <h1 className="not-italic font-semibold text-[36px] leading-[56px] text-black">
                 Sign In
               </h1>
-              <p className="font-['SF_Compact_Text'] not-italic font-normal text-[16px] opacity-50 text-black">
+              <p className=" not-italic font-normal text-[16px] opacity-50 text-black">
                 Enter your email and password to sign in
               </p>
             </div>

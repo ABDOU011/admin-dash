@@ -52,7 +52,7 @@ export default function Sidebar() {
     <section className="flex flex-col self-stretch pt-14 pb-5 gap-10 bg-white h-screen min-w-[280px]">
       <header className="flex flex-col w-full">
         <h1 className="justify-center self-center px-5 py-1 text-2xl font-bold leading-7 text-sky-400">
-          HORIZON <span>FREE</span>
+          GuiDZ 
         </h1>
       </header>
       <hr className="h-[1px] w-full bg-[#E4E4E4]"></hr>

@@ -264,8 +264,8 @@ const HotspotForm: React.FC<HotspotFormProps> = ({
           )}
         </div>
       ))}
-      <button onClick={handleAddProvenance} className="text-black">
-        Add Another Stop
+      <button onClick={handleAddProvenance} className="flex flex-row justify-center items-center gap-[10px] border-[1px] border-[solid] border-[#E4E4E4] rounded-[16px] w-[566px] h-[56px] text-[#24BAEC]">
+        Add Another Hotspot
       </button>
     </div>
   );

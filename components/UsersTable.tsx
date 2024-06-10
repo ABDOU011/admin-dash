@@ -13,11 +13,9 @@ import DeleteIcon from "@mui/icons-material/Delete";
 import EditIcon from "@mui/icons-material/Edit";
 import { createTheme, ThemeProvider } from "@mui/material/styles";
 import { ToastContainer, toast } from "react-toastify";
-import Dialog from '@mui/material/Dialog';
-import DialogActions from '@mui/material/DialogActions';
-import DialogContent from '@mui/material/DialogContent';
-import DialogContentText from '@mui/material/DialogContentText';
-import DialogTitle from '@mui/material/DialogTitle';
+import ConfirmationNumberIcon from '@mui/icons-material/ConfirmationNumber';
+import { useRouter } from "next/navigation";
+
 
 
 export default function UsersTable({}: {}) {
@@ -37,7 +35,7 @@ export default function UsersTable({}: {}) {
     setOpen(false);
   };
    
-
+  const router = useRouter()
   const handleOpenModal = async (userId: string) => {
     const edituser = await getUser(userId);
     
@@ -60,7 +58,7 @@ export default function UsersTable({}: {}) {
   useEffect(() => {
     fetchData();
   }, []);
-
+  
   const columns = [
     {
       name: "Name",
@@ -94,14 +92,18 @@ export default function UsersTable({}: {}) {
         customBodyRender: (value: any) => {
           return (
             <div className="flex flex-row">
+              <button onClick={() => router.push(`/protected/users/reservations?id=${value}`)}>
+                <ConfirmationNumberIcon style={{ height: 24, width: 24 }}></ConfirmationNumberIcon>
+              </button>
+              <button onClick={() => handleOpenModal(value)}>
+                <EditIcon style={{ height: 24, width: 24 }}></EditIcon>
+              </button>
               <button
                 onClick={() => handleClickOpen(value)}
               >
                 <DeleteIcon style={{ height: 24, width: 24 }}></DeleteIcon>
               </button>
-              <button onClick={() => handleOpenModal(value)}>
-                <EditIcon style={{ height: 24, width: 24 }}></EditIcon>
-              </button>
+              
             </div>
           );
         },

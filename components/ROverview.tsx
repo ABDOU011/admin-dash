@@ -14,20 +14,16 @@ import { BarChart } from "@mui/x-charts";
 
 export default function ROverview({}: {}) {
   const xLabels = [
-    "Jan",
-    "Feb",
-    "Mar",
-    "Apr",
-    "May",
-    "June",
-    "July",
-    "Aug",
-    "Sept",
-    "Oct",
-    "Nov",
-    "Dec",
+    "14",
+    "14C",
+    "14B",
+    "14A",
+    "A1",
+    "OM",
+    "IM",
+
   ];
-  const data = [14, 25, 33, 19, 15, 27, 24, 35, 31, 36, 38, 44];
+  const data = [14, 25, 33, 19, 15, 27, 24];
   const [newusers, setNewUsers] = useState<any>(0);
   const [totalusers, setTotalUsers] = useState<any>(0);
   const [linedata, setLineData] = useState<any>();
@@ -132,8 +128,8 @@ export default function ROverview({}: {}) {
     <div className="flex flex-col items-center pt-0 px-[24px] pb-[80px] gap-[24px] w-full">
       <div className="flex flex-row items-start px-[32px] py-[24px] gap-[64px] bg-[#FFFFFF] border-[1px] border-[solid] border-[#E4E4E4] rounded-[16px]">
         <div className="flex flex-col gap-2">
-          <h1 className="text-black text-3xl">2000</h1>
-          <h3 className="text-black opacity-50 text-[12px]">Seats reserved</h3>
+          <h1 className="text-black text-3xl">157</h1>
+          <h3 className="text-black opacity-50 text-[12px]">Active Buses</h3>
         </div>
         <BarChart
           xAxis={[{ data: xLabels, scaleType: "band" }]}
