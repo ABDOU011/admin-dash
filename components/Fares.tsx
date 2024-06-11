@@ -127,7 +127,7 @@ const Fares: React.FC<ProvenancesProps> = ({ setFares, fares, stops }) => {
         onClick={handleAddProvenance}
         className="flex flex-row justify-center items-center gap-[10px] border-[1px] border-[solid] border-[#E4E4E4] rounded-[16px] w-[566px] h-[56px] text-[#24BAEC]"
       >
-        Add Stop Here
+        Add New Rule
       </button>
     </div>
   );
