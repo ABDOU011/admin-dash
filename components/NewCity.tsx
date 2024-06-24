@@ -213,7 +213,7 @@ export default function NewCity({ cityId }: NewCityProps) {
 
     return result;
   }
-  console.log(hotspot)
+ 
   
   const handleSubmit = async () => {
     if (cityId) {
@@ -283,7 +283,7 @@ export default function NewCity({ cityId }: NewCityProps) {
       };
       const { data, error } = await supabase
         .from("cities")
-        .insert(city)
+        .insert(city2)
         .select("id");
 
       const cityId = data?.[0].id;

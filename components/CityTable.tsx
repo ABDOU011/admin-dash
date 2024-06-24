@@ -13,6 +13,7 @@ import { ToastContainer, toast } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
 import NewCity from "./NewCity";
 import {  useRouter } from "next/navigation";
+import { Bars } from "react-loader-spinner";
 
 type CityInfo = {
   number: string;
@@ -205,9 +206,17 @@ export default function CityTable({}: {}) {
     });
 
   return (
-    <div className="flex pt-0 px-[24px] pb-[80px]  w-full">
+    <div className="flex pt-0 px-[24px] pb-[80px] w-full h-full">
       {loading ? (
-        <div>Loading....</div>
+        <div className="ml-[500px] text-black text-[18px]">Loading <Bars
+        height="80"
+        width="80"
+        color="#4fa94d"
+        ariaLabel="bars-loading"
+        wrapperStyle={{}}
+        wrapperClass=""
+        visible={true}
+        /></div>
       )
     :(
       <ThemeProvider theme={getMuiTheme()}>
