@@ -14,6 +14,21 @@ import "react-toastify/dist/ReactToastify.css";
 import NewCity from "./NewCity";
 import {  useRouter } from "next/navigation";
 
+type CityInfo = {
+  number: string;
+  name: string;
+};
+
+
+
+type FlattenedDataRow = {
+  cityInfo: string;
+  provs: string;
+  streets: string;
+  stops: string;
+  hotspots: string;
+  id: string;
+};
 
 export default function CityTable({}: {}) {
   const [daat, setData] = useState<(object | string[] | number[])[]>([]);
@@ -22,7 +37,7 @@ export default function CityTable({}: {}) {
   const [SelectedCity, setSelectedCity] = useState<any>(null);
   const [open, setOpen] = React.useState(false);
   const [UserId, setUserId] = React.useState('');
-
+  const [loading, setLoading] = useState(false);
   const handleClickOpen = (userId:string) => {
     setUserId(userId);
     setOpen(true);
@@ -44,9 +59,22 @@ export default function CityTable({}: {}) {
   };
 
   const fetchData = async () => {
+    setLoading(true);
     const fetchedData = await getCities();
+    const formattedData: FlattenedDataRow[] = fetchedData.map((row: any) => {
+      const [city, provs, streets,stops, hotspots, id] = row;
+      return {
+        cityInfo: `${city.number} - ${city.name}`,
+        provs,
+        streets,
+        stops,
+        hotspots,
+        id,
+      };
+    });
+    setData(formattedData);
 
-    setData(fetchedData);
+    setLoading(false);
   };
   useEffect(() => {
     fetchData();
@@ -56,26 +84,67 @@ export default function CityTable({}: {}) {
 
   const columns = [
     {
-      name: "City name",
+      name: "cityInfo",
+      label:"City",
       options: {
+        searchable:true,
+        sortCompare: (order: string) => {
+          return (obj1: { data: string; }, obj2: { data: string; }) => {
+            console.log(order); 
+            let val1 = parseInt(obj1.data, 10);
+            let val2 = parseInt(obj2.data, 10);
+            return (val1 - val2) * (order === 'asc' ? 1 : -1);
+          };
+        },
+        filter:false,
         customBodyRender: (value: any) => {
+          const [number, name] = value.split(' - ');
           return (
             <div className="flex flex-row items-center p-0 gap-[16px]">
               <div className="text-[#24BAEC] h-7 border-solid border-[#24BAEC] border-t-[2px] border-b-[2px]">
-                {value.number}
+                {number}
               </div>
-              {value.name}
+              {name}
             </div>
           );
         },
       },
     },
-    "Provs Count",
-    "Streets Count",
-    "Stops Count",
-    "HotSpots Count",
+    {name:"provs",label:'Provs Count',options:{filter:false,sortCompare: (order: string) => {
+      return (obj1: { data: string; }, obj2: { data: string; }) => {
+        console.log(order); 
+        let val1 = parseInt(obj1.data, 10);
+        let val2 = parseInt(obj2.data, 10);
+        return (val1 - val2) * (order === 'asc' ? 1 : -1);
+      };
+    },}},
+    {name:"streets",label:'Streets Count',options:{filter:false,sortCompare: (order: string) => {
+      return (obj1: { data: string; }, obj2: { data: string; }) => {
+        console.log(order); 
+        let val1 = parseInt(obj1.data, 10);
+        let val2 = parseInt(obj2.data, 10);
+        return (val1 - val2) * (order === 'asc' ? 1 : -1);
+      };
+    },}},
+    {name:"stops",label:'Stops Count', options:{filter:false,sortCompare: (order: string) => {
+      return (obj1: { data: string; }, obj2: { data: string; }) => {
+        console.log(order); 
+        let val1 = parseInt(obj1.data, 10);
+        let val2 = parseInt(obj2.data, 10);
+        return (val1 - val2) * (order === 'asc' ? 1 : -1);
+      };
+    },}},
+    {name:"hotspots",label:'HotSpots Count',options:{filter:false,sortCompare: (order: string) => {
+      return (obj1: { data: string; }, obj2: { data: string; }) => {
+        console.log(order); 
+        let val1 = parseInt(obj1.data, 10);
+        let val2 = parseInt(obj2.data, 10);
+        return (val1 - val2) * (order === 'asc' ? 1 : -1);
+      };
+    },}},
+    
     {
-      name: "delete",
+      name: "id",
       label: "Actions",
       options: {
         sort: false,
@@ -137,6 +206,10 @@ export default function CityTable({}: {}) {
 
   return (
     <div className="flex pt-0 px-[24px] pb-[80px]  w-full">
+      {loading ? (
+        <div>Loading....</div>
+      )
+    :(
       <ThemeProvider theme={getMuiTheme()}>
         <MUIDataTable
           title={""}
@@ -145,6 +218,8 @@ export default function CityTable({}: {}) {
           options={options}
         />
       </ThemeProvider>
+    )}
+      
 
       <ToastContainer />
       <Modal

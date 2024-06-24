@@ -131,8 +131,8 @@ export default function Overview({}: {}) {
   const pietotal = histo2?.[0].value + histo2?.[1].value + histo2?.[2].value;
   return (
     <div className="flex flex-col items-center pt-0 px-[24px] pb-[80px] gap-[24px] w-full">
-      <div className="flex flex-row justify-between w-full">
-        <div className="items-start px-[24px] py-[20px]  w-[290.67px] h-[80px] bg-[#FFFFFF] border-[0.6px] border-[solid] border-[#E4E4E4] rounded-[16px]">
+      <div className="flex flex-row justify-between gap-[40px] w-full">
+        <div className="items-start px-[24px] py-[20px]  w-full h-[80px] bg-[#FFFFFF] border-[0.6px] border-[solid] border-[#E4E4E4] rounded-[16px]">
           <div className="flex flex-row gap-3">
             <Userslogo></Userslogo>
             <div className="flex flex-col justify-center">
@@ -145,7 +145,7 @@ export default function Overview({}: {}) {
             </div>
           </div>
         </div>
-        <div className="items-start px-[24px] py-[20px]  w-[290.67px] h-[80px] bg-[#FFFFFF] border-[0.6px] border-[solid] border-[#E4E4E4] rounded-[16px]">
+        <div className="items-start px-[24px] py-[20px]  w-full h-[80px] bg-[#FFFFFF] border-[0.6px] border-[solid] border-[#E4E4E4] rounded-[16px]">
           <div className="flex flex-row gap-3">
             <NewUserslogo></NewUserslogo>
             <div className="flex flex-col justify-center">
@@ -158,7 +158,7 @@ export default function Overview({}: {}) {
             </div>
           </div>
         </div>
-        <div className="items-start px-[24px] py-[20px]  w-[290.67px] h-[80px] bg-[#FFFFFF] border-[0.6px] border-[solid] border-[#E4E4E4] rounded-[16px]">
+        <div className="items-start px-[24px] py-[20px]  w-full h-[80px] bg-[#FFFFFF] border-[0.6px] border-[solid] border-[#E4E4E4] rounded-[16px]">
           <div className="flex flex-row gap-3">
             <ActiveUserslogo></ActiveUserslogo>
             <div className="flex flex-col justify-center">
@@ -172,7 +172,7 @@ export default function Overview({}: {}) {
           </div>
         </div>
       </div>
-      <div className="flex flex-row items-start px-[32px] py-[24px] gap-[64px] bg-[#FFFFFF] border-[1px] border-[solid] border-[#E4E4E4] rounded-[16px]">
+      <div className="w-full flex flex-row items-start px-[32px] py-[24px] gap-[64px] bg-[#FFFFFF] border-[1px] border-[solid] border-[#E4E4E4] rounded-[16px]">
         <div className="flex flex-col gap-16">
           <h1 className="text-black text-3xl">New Users By Months</h1>
           <h3 className="text-black">
@@ -186,13 +186,13 @@ export default function Overview({}: {}) {
               data: linedata ? linedata : [],
             },
           ]}
-          width={780}
+          width={770}
           height={300}
           leftAxis={null}
         />
       </div>
-      <div className="flex flex-row items-start justify-between w-full">
-        <div className="flex flex-col items-start w-[556px] px-[16px] py-[24px] gap-[16px] bg-[#FFFFFF] border-[1px] border-[solid] border-[#E4E4E4] rounded-[16px]">
+      <div className="flex flex-row items-start justify-between gap-[40px] w-full">
+        <div className="flex flex-col items-start w-full px-[16px] py-[24px] gap-[16px] bg-[#FFFFFF] border-[1px] border-[solid] border-[#E4E4E4] rounded-[16px]">
           <div className="flex flex-row justify-between w-full">
             <p className="font-semibold text-[16px] text-[#1B1E28]">
               Users activities logs
@@ -216,7 +216,7 @@ export default function Overview({}: {}) {
             <p className="font-semibold text-[16px] text-[#1B1E28]">
               Users activities logs
             </p>
-            <button className="text-[12px] text-black opacity-50">today</button>
+            
           </div>
           <PieChart
             series={[

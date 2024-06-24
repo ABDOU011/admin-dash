@@ -148,7 +148,7 @@ export default function ROverview({}: {}) {
   
   return (
     <div className="flex flex-col items-center pt-0 px-[24px] pb-[80px] gap-[24px] w-full">
-      <div className="flex flex-row items-start px-[32px] py-[24px] gap-[64px] bg-[#FFFFFF] border-[1px] border-[solid] border-[#E4E4E4] rounded-[16px]">
+      <div className="flex flex-row items-start w-full px-[32px] py-[24px] gap-[64px] bg-[#FFFFFF] border-[1px] border-[solid] border-[#E4E4E4] rounded-[16px]">
         <div className="flex flex-col gap-2">
           <h1 className="text-black text-3xl">{linedata?.total}</h1>
           <h3 className="text-black opacity-50 text-[12px]">Seats reserved</h3>
@@ -165,8 +165,8 @@ export default function ROverview({}: {}) {
           leftAxis={null}
         />
       </div>
-      <div className="flex flex-row items-start justify-between w-full">
-        <div className="flex flex-col items-start w-[556px] px-[16px] py-[24px] gap-[16px] bg-[#FFFFFF] border-[1px] border-[solid] border-[#E4E4E4] rounded-[16px]">
+      <div className="flex flex-row items-start justify-between w-full gap-[40px]">
+        <div className="flex flex-col items-start w-full px-[16px] py-[24px] gap-[16px] bg-[#FFFFFF] border-[1px] border-[solid] border-[#E4E4E4] rounded-[16px]">
           <div className="flex flex-row justify-between w-full">
             <p className="font-semibold text-[16px] text-[#1B1E28]">
               Reservations logs

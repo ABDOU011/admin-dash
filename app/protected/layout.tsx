@@ -31,7 +31,8 @@ export default async function RootLayout({
     
         <main className="flex flex-row min-h-screen w-full">
           <Sidebar></Sidebar>
-          {children}
+          <div className="ml-[280px] w-full h-full">{children}</div>
+          
         </main>
      
   );

@@ -54,9 +54,11 @@ const Provenances: React.FC<ProvenancesProps> = ({
   };
   const [open, setOpen] = useState(false);
   const [UserId, setUserId] = useState("");
+  const [index2, setIndex] = useState<any>();
 
-  const handleClickOpen = (userId: string) => {
+  const handleClickOpen = (userId: string,index:any) => {
     setUserId(userId);
+    setIndex(index);
     setOpen(true);
   };
 
@@ -67,7 +69,7 @@ const Provenances: React.FC<ProvenancesProps> = ({
   const handleAddProvenance = () => {
     setProvenance([...provenances, { name: "", namear: "", numstreet: 0 }]);
   };
-  const handleRemoveProvenance = async (index: number, id: any) => {
+  const handleRemoveProvenance = async (index: any, id: any) => {
     await deleteProv(id);
     const updatedProvenances = [...provenances];
     updatedProvenances.splice(index, 1);
@@ -132,7 +134,7 @@ const Provenances: React.FC<ProvenancesProps> = ({
                 <div className="flex flex-row">
                   <button
                     onClick={() => {
-                      handleClickOpen(provenance.id!.toString());
+                      handleClickOpen(provenance.id!.toString(),index);
                     }}
                     className="text-black "
                   >
@@ -170,8 +172,7 @@ const Provenances: React.FC<ProvenancesProps> = ({
                         <button
                           onClick={() => {
                             try {
-                              handleRemoveProvenance(index, provenance?.id);
-
+                              handleRemoveProvenance(index2, provenance?.id);
                               handleClose();
                               toast.success("provenance deleted");
                             } catch (error) {

@@ -85,7 +85,7 @@ export default function City(): JSX.Element {
   };
 
   return (
-    <div className="bg-[#F4F7FE] w-full flex flex-col items-start pt-12 px-6">
+    <div className="bg-[#F4F7FE] w-full flex flex-col items-start pt-12 px-6 h-full">
       <button className="ml-5 mb-5" onClick={() => router.back()}>
         <ArrowBackIcon className="text-black" />
       </button>

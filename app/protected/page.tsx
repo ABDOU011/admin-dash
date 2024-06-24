@@ -14,12 +14,12 @@ export default async function ProtectedPage() {
     <div className="bg-[#F4F7FE] w-full">
       <div className="bg-[#F4F7FE] w-full flex flex-col items-start">
         <div className="flex flex-row items-center justify-between p-[24px] gap-[56px] w-full">
-          <nav className="flex flex-row justify-start items-center gap-[56px] w-[554px] h-[24px]">
-            <button className=" font-medium text-[20px] text-[#24BAEC] ">
+          <nav className="flex flex-row justify-start pl-7 items-center gap-[56px] w-full h-[24px]">
+            <button className=" font-medium text-[18px] text-[#24BAEC] ">
               Overview
             </button>
           </nav>
-          <div className="flex-row items-center p-[12px] gap-[18px] w-[110px] h-[54px] bg-[#FFFFFF] border-[1px] border-[solid] border-[#E4E4E4]  rounded-[30px]">
+          <div className="flex-row items-center p-[12px] gap-[18px]  h-[54px] bg-[#FFFFFF] border-[1px] border-[solid] border-[#E4E4E4]  rounded-[30px]">
             <button
               onClick={() => {
                 signout();

@@ -49,7 +49,7 @@ export default function Sidebar() {
   }, []);
 
   return (
-    <section className="flex flex-col self-stretch pt-14 pb-5 gap-10 bg-white h-screen min-w-[280px]">
+    <section className="flex flex-col self-stretch pt-14 pb-5 gap-10 bg-white h-screen min-w-[280px] fixed">
       <header className="flex flex-col w-full">
         <h1 className="justify-center self-center px-5 py-1 text-2xl font-bold leading-7 text-sky-400">
           GuiDZ 

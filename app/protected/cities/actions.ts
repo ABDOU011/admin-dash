@@ -279,8 +279,8 @@ export async function save(city:any,provenance:any,streets:any,stops:any,hotspot
   provenances.forEach((prov:any, index:any) => {
     streets[index].forEach((street:any) => {
       result.push({
-        street: street.name,
-        provenance: prov.name,
+        street: street.name+" | "+street.namear,
+        provenance: prov.name+" | "+prov.namear,
         city: cityId!
       });
     });
@@ -298,7 +298,7 @@ function mergeStreetsAndStops(streets:any, stops:any) {
         
         stop?.forEach((element: any) => {
           result.push({
-            streetName: street.name,
+            streetName: street.name+" | "+street.namear,
             stopLongitude:  element.longitude,
             stopLatitude: element.latitude
           });
@@ -907,12 +907,12 @@ export async function chart2(){
   const { data } = await supabase
   .from("itineraries")
   .select('id,seats,to')
-  .in('state', ['done', 'planned'])
+  .in('state', ['done', 'planned',"on-going"])
   
   const places:any = []
   for (const reservation of data!) {
     const {data:it, error} = await supabase.from("places").select("city").eq("id", reservation.to).single();
-    places.push({id:it?.city,value:0,name:""})
+    places.push({id:it?.city,value:1,name:""})
     
   }
 
@@ -927,12 +927,13 @@ export async function chart2(){
     return acc;
   }, []);
   
+  
   for(const item of result){
     const {data:it, error} = await supabase.from("cities").select("name").eq("id", item.id).single();
     item.name = it?.name
   }
-
-  return {result:result,total:(places?.length-1)}
+  console.log(result)
+  return {result:result,total:(places?.length)}
 
   
 }

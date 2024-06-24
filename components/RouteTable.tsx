@@ -21,7 +21,7 @@ type RouteInfo = {
   name: string;
 };
 
-type OriginalDataRow = [RouteInfo, string, string, string, string];
+
 
 type FlattenedDataRow = {
   routeInfo: string;
@@ -65,7 +65,7 @@ export default function RouteTable({}: {}) {
         id,
       };
     });
-    console.log(formattedData);
+   
     
     setData(formattedData);
   };

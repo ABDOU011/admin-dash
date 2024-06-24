@@ -76,34 +76,30 @@ export default function Login({
             </div>
 
             <form className="animate-in flex-1 flex flex-col items-start p-0  justify-center gap-[29px] text-foreground">
-              <div className="flex flex-col gap-3">
+              <div className="flex flex-col gap-2">
                 <label className="text-md text-black" htmlFor="email">
                   Email
                 </label>
                 <input
-                  className="rounded-2xl px-4 py-2 bg-inherit border-[#E4E4E4] border mb-6 w-[410px] text-black"
+                  className="rounded-2xl px-4 py-2 bg-inherit h-[50px] border-[#E4E4E4] border mb-6 w-[410px] text-black"
                   name="email"
                   placeholder="you@example.com"
                   required
                 />
               </div>
-              <div className="flex flex-col gap-3">
+              <div className="flex flex-col gap-2">
                 <label className="text-md text-black" htmlFor="password">
                   Password
                 </label>
                 <input
-                  className="rounded-2xl px-4 py-2 bg-inherit border-[#E4E4E4] border mb-6 w-[410px] text-black"
+                  className="rounded-2xl px-4 py-2 bg-inherit border-[#E4E4E4] h-[50px] border mb-6 w-[410px] text-black"
                   type="password"
                   name="password"
                   placeholder="••••••••"
                   required
                 />
               </div>
-              <label className="text-md text-black">
               
-                <input name="rememberme" type="checkbox"   />
-                 <span>    </span>   Remember me
-              </label>
               {searchParams?.message && (
                 <p className="mt-4 p-4 text-red-700 text-center">
                   {searchParams.message}
@@ -111,7 +107,7 @@ export default function Login({
               )}
               <SubmitButton
                 formAction={signIn}
-                className="bg-[#24BAEC] w-full rounded-2xl px-4 py-2 text-foreground mb-2"
+                className="bg-[#24BAEC] w-full rounded-2xl px-4 py-2 text-foreground mb-2 h-[56px]"
                 pendingText="Signing In..."
               >
                 Sign In
