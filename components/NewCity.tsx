@@ -184,7 +184,7 @@ export default function NewCity({ cityId }: NewCityProps) {
     provenances.forEach((prov: any, index: any) => {
       streets[index].forEach((street: any) => {
         result.push({
-          street: street.name + " | " + street.namear,
+          street: street.name+" | "+street.namear,
           provenance: prov.name + " | " + prov.namear,
           city: cityId!,
         });
@@ -213,7 +213,7 @@ export default function NewCity({ cityId }: NewCityProps) {
 
     return result;
   }
- 
+  console.log(hotspot[0].place==="Oran - aaaaaa")
   
   const handleSubmit = async () => {
     if (cityId) {
@@ -305,6 +305,10 @@ export default function NewCity({ cityId }: NewCityProps) {
               .from("hotspots")
               .insert({ name: hots.name + " | " + hots.namear, city: cityId })
               .select("id");
+              if(herror){
+
+                console.log(herror)
+              }
             const { data: place, error: perror } = await supabase
               .from("places")
               .update({ hotspot: hot?.[0].id })
@@ -344,7 +348,7 @@ export default function NewCity({ cityId }: NewCityProps) {
 
     window.location.reload();
   };
-
+console.log(streets)
   return (
     <div className="flex flex-row items-start pt-0 px-[24px] pb-[80px] gap-[40px] w-full">
       <div className="flex flex-col justify-between items-start px-0 py-[24px] w-[300px] h-[534px]">

@@ -15,6 +15,7 @@ import { createTheme, ThemeProvider } from "@mui/material/styles";
 import { ToastContainer, toast } from "react-toastify";
 import ConfirmationNumberIcon from '@mui/icons-material/ConfirmationNumber';
 import { useRouter } from "next/navigation";
+import { Bars } from "react-loader-spinner";
 
 
 
@@ -25,6 +26,7 @@ export default function UsersTable({}: {}) {
   const [selectedUser, setSelectedUser] = useState<any>(null);
   const [open, setOpen] = React.useState(false);
   const [UserId, setUserId] = React.useState('');
+  const [loading, setLoading] = useState(false);
 
   const handleClickOpen = (userId:string) => {
     setUserId(userId);
@@ -51,9 +53,11 @@ export default function UsersTable({}: {}) {
   };
   
   const fetchData = async () => {
+    setLoading(true);
     const fetchedData = await getUsers();
     
     setData(fetchedData);
+    setLoading(false);
   };
   useEffect(() => {
     fetchData();
@@ -145,7 +149,18 @@ export default function UsersTable({}: {}) {
 
   return (
     <div className="flex pt-0 px-[24px] pb-[80px]  w-full">
-      <ThemeProvider theme={getMuiTheme()}>
+      {loading ? (
+        <div className="ml-[500px] text-black text-[18px]">Loading <Bars
+        height="80"
+        width="80"
+        color="#4fa94d"
+        ariaLabel="bars-loading"
+        wrapperStyle={{}}
+        wrapperClass=""
+        visible={true}
+        /></div>
+      ):(
+        <ThemeProvider theme={getMuiTheme()}>
         <MUIDataTable
           title={""}
           data={daat}
@@ -153,6 +168,8 @@ export default function UsersTable({}: {}) {
           options={options}
         />
       </ThemeProvider>
+      )}
+      
 
       <ToastContainer />
       <Modal

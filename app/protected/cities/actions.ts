@@ -233,7 +233,7 @@ export async function save(city:any,provenance:any,streets:any,stops:any,hotspot
       }
 
     // console.log(provadd)
-    // console.log(streetadd)
+    //  console.log(streetadd)
     // console.log(stopadd)
       
     } catch (error) {
@@ -743,8 +743,8 @@ export async function fetchCityData(cityId: string) {
 const { data: stopsData, error: stopsError } = await supabase
   .from('stops')
   .select('id, place,longitude, latitude')
-  .in('place', placeIds);
-
+  .in('place', placeIds); 
+    
 if (stopsError) throw stopsError;
 
 // Calculate the number of stops for each place
@@ -783,7 +783,7 @@ const streets = Object.keys(streetsGroupedByProvenance).reduce((acc: any, proven
 
 const stops = Object.keys(streetsGroupedByProvenance).reduce((acc: any, provenance: string, provIndex: number) => {
   streetsGroupedByProvenance[provenance].forEach((street: any, streetIndex: number) => {
-    const place = provenancesData.find((p: any) => p.provenance === provenance && p.street === street.name);
+    const place = provenancesData.find((p: any) => p.provenance === provenance && p.street === street.name+" | "+street.namear);
     if (place) {
       const key = `${provIndex}-${streetIndex}`;
       acc[key] = stopsByPlace[place.id] || [];
@@ -795,7 +795,7 @@ const stops = Object.keys(streetsGroupedByProvenance).reduce((acc: any, provenan
     
     
 
-   
+console.log(stops)
     return {
       city,
       provenances,

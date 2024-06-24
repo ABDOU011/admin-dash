@@ -14,6 +14,7 @@ import {
   piechart,
 } from "@/app/protected/users/actions/actions";
 import Select from "react-select";
+import { Bars } from "react-loader-spinner";
 
 export default function Dashboard({}: {}) {
   const [searchResults, setSearchResults] = useState<
@@ -50,10 +51,11 @@ export default function Dashboard({}: {}) {
   const maxCount = Math.max(...(linedata ? linedata : []));
   const [month, setMonth] = useState<any>(new Date().getMonth() + 1);
   const maxIndex = linedata?.indexOf(maxCount);
-
+  const [loading, setLoading] = useState(false);
   const timeoutRef = useRef<NodeJS.Timeout | null>(null);
 
   const fetchData = async () => {
+    setLoading(true);
     const newU = await newUsers();
     setNewUsers(newU);
     const totalU = await usersCount();
@@ -66,6 +68,7 @@ export default function Dashboard({}: {}) {
     setHistory(hist);
     const hist2 = await piechart();
     setHistory2(hist2);
+    setLoading(false);
   };
 
   useEffect(() => {
@@ -73,6 +76,7 @@ export default function Dashboard({}: {}) {
   }, [month]);
 
   useEffect(() => {
+    setLoading(true);
     async function runHistoryCode() {
       const historyList = document.createElement("div");
       historyList.classList.add("flex", "flex-col", "gap-2");
@@ -121,6 +125,8 @@ export default function Dashboard({}: {}) {
     }
 
     timeoutRef.current = setTimeout(runHistoryCode, 500);
+
+    setLoading(false)
   }, [histo]);
 
   // Add the historyList to the desired parent element
@@ -158,6 +164,20 @@ export default function Dashboard({}: {}) {
   const pietotal = histo2?.[0].value + histo2?.[1].value + histo2?.[2].value;
 
   return (
+    <div>
+    {loading? (
+      <div className="ml-[500px] text-black text-[18px]">Loading <Bars
+      height="80"
+      width="80"
+      color="#4fa94d"
+      ariaLabel="bars-loading"
+      wrapperStyle={{}}
+      wrapperClass=""
+      visible={true}
+      /></div>
+    )
+  :
+  (
     <div className="flex flex-col items-center pt-0 px-[24px] pb-[80px] gap-[24px] w-full">
       <div className="flex flex-row justify-between gap-[40px] w-full">
         <div className="items-start px-[24px] py-[20px]  w-full h-[80px] bg-[#FFFFFF] border-[0.6px] border-[solid] border-[#E4E4E4] rounded-[16px]">
@@ -302,6 +322,8 @@ export default function Dashboard({}: {}) {
           </div>
         </div>
       </div>
+    </div>
+  )}
     </div>
   );
 }

@@ -33,6 +33,7 @@ const CityForm: React.FC<CityFormProps> = ({ setCity, city }) => {
           <input
             value={city?.name}
             onChange={handleChange}
+            required
             type="text"
             name="name"
             placeholder="City Name"
@@ -47,6 +48,7 @@ const CityForm: React.FC<CityFormProps> = ({ setCity, city }) => {
           <input
             value={city?.namear}
             onChange={handleChange}
+            required
             type="text"
             name="namear"
             placeholder="City Arabic Name"
@@ -63,6 +65,7 @@ const CityForm: React.FC<CityFormProps> = ({ setCity, city }) => {
           <input
             value={city?.number}
             onChange={handleChange}
+            required
             type="number"
             name="number"
             placeholder="Number"

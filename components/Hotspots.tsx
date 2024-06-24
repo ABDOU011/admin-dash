@@ -69,7 +69,7 @@ const HotspotForm: React.FC<HotspotFormProps> = ({
       provenances.map((provenance, provIndex) =>
         streets[provIndex]?.map((street, streetIndex) =>
           result.push({
-            label: street.name+" - "+street.namear,
+            label: street.name+" | "+street.namear,
           })
         )
       );

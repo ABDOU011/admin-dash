@@ -28,11 +28,11 @@ export default function Cities() {
   
     
     
- 
+
     
   
   return (
-    <div className="bg-[#F4F7FE] w-full flex flex-col items-start min-h-screen">
+    <div className="bg-[#F4F7FE] w-full flex flex-col items-start min-h-screen ">
       <div className="flex flex-row items-center justify-between p-[24px] w-full">
         <nav className="flex flex-row pl-7 items-center gap-[56px] w-[554px] h-[24px]">
           {selected === "overview" ? (

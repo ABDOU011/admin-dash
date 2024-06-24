@@ -11,7 +11,7 @@ import Dashboard from "@/components/Dashboard";
 
 export default async function ProtectedPage() {
   return (
-    <div className="bg-[#F4F7FE] w-full">
+    <div className="bg-[#F4F7FE] w-full min-h-screen">
       <div className="bg-[#F4F7FE] w-full flex flex-col items-start">
         <div className="flex flex-row items-center justify-between p-[24px] gap-[56px] w-full">
           <nav className="flex flex-row justify-start pl-7 items-center gap-[56px] w-full h-[24px]">

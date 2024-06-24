@@ -305,9 +305,10 @@ export async function getRoutes() {
 
   for (const city of citiesData) {
     const cityId = city.id;
-
+    const { count } = await supabase.from("trips").select('id', { count: 'exact' }).eq('route', cityId);
+    
     const stopsCount = city.stops.length;
-
+    
     formattedData.push([
       {
         acr: city.acronym.toString(),
@@ -316,13 +317,7 @@ export async function getRoutes() {
       `${stopsCount} Stops`,
       `${city.trip_cost}`,
 
-      city.busy >= 80
-        ? "overwelming"
-        : city.busy >= 60
-        ? "very crowded"
-        : city.busy >= 40
-        ? "normal"
-        : "quiet", // Assuming a static value for hot spots as per your example
+      count, 
       cityId.toString(),
     ]);
   }

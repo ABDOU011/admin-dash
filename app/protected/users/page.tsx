@@ -11,7 +11,6 @@ export default function users (){
 
     return (
         <Header>
-
         </Header>
     )
 }

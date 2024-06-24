@@ -13,6 +13,7 @@ import {
 import { BarChart } from "@mui/x-charts";
 import { piechart } from "@/app/protected/cities/actions";
 import { chart, history } from "@/app/protected/routes/actions";
+import { Bars } from "react-loader-spinner";
 
 export default function ROverview({}: {}) {
   const xLabels = [
@@ -31,12 +32,14 @@ export default function ROverview({}: {}) {
   const [linedata, setLineData] = useState<any>();
   const [histo, setHistory] = useState<any>();
   const [histo2, setHistory2] = useState<any>();
-  
+  const [loading, setLoading] = useState(false);
+
   
 
   const timeoutRef = useRef<NodeJS.Timeout | null>(null);
 
   const fetchData = async () => {
+    setLoading(true);
     const newU = await newUsers();
     setNewUsers(newU);
     const totalU = await usersCount();
@@ -47,7 +50,7 @@ export default function ROverview({}: {}) {
     setHistory(hist);
     const hist2 = await piechart();
     setHistory2(hist2);
-    
+    setLoading(false);
   };
 
   useEffect(() => {
@@ -55,6 +58,7 @@ export default function ROverview({}: {}) {
   }, []);
 
   useEffect(() => {
+    setLoading(true);
     async function runHistoryCode() {
       const historyList = document.createElement("div");
       historyList.classList.add("flex", "flex-col", "gap-2");
@@ -119,6 +123,7 @@ export default function ROverview({}: {}) {
     }
 
     timeoutRef.current = setTimeout(runHistoryCode, 500);
+    setLoading(false);
   }, [histo]);
 
   // Add the historyList to the desired parent element
@@ -147,6 +152,20 @@ export default function ROverview({}: {}) {
 
   
   return (
+    <div className="w-full">
+      {loading?(
+        <div className="ml-[500px] text-black text-[18px]">Loading <Bars
+        height="80"
+        width="80"
+        color="#4fa94d"
+        ariaLabel="bars-loading"
+        wrapperStyle={{}}
+        wrapperClass=""
+        visible={true}
+        /></div>
+      )
+    :
+    (
     <div className="flex flex-col items-center pt-0 px-[24px] pb-[80px] gap-[24px] w-full">
       <div className="flex flex-row items-start w-full px-[32px] py-[24px] gap-[64px] bg-[#FFFFFF] border-[1px] border-[solid] border-[#E4E4E4] rounded-[16px]">
         <div className="flex flex-col gap-2">
@@ -239,5 +258,9 @@ export default function ROverview({}: {}) {
         </div>
       </div>
     </div>
+      
+    )}
+    </div>
+    
   );
 }
