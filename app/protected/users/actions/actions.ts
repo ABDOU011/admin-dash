@@ -297,6 +297,25 @@ export async function monthchart(){
 
 }
 
+export async function revenuechart(d:any){
+  const supabase = createClient();
+  const { data, error } = await supabase
+  .rpc('get_daily_revenue', { p_month : d })
+  
+    
+
+  if (error) {
+    console.error("Error getting monthly revenue:", error);
+    return;
+  }
+
+  
+
+  return data
+  
+}
+
+
 // export async function activeusers(){
 //   const supabase = createClient();
 //   const { data: users, error } = await supabase.auth.admin.listUsers();
@@ -363,4 +382,27 @@ if (error) {
 }else{
   return data?.[0];
 }
+}
+
+
+export async function piechart(){
+  const supabase = createClient();
+  const { count:can } = await supabase
+  .from("reservations")
+  .select('id', { count: 'exact' })
+  .eq('state', "cancelled")
+ 
+
+  const { count:done } = await supabase
+  .from("reservations")
+  .select('id', { count: 'exact' })
+  .in('state', ['done', 'cleared'])
+  
+  const { count:reserved } = await supabase
+  .from("reservations")
+  .select('id', { count: 'exact' })
+  .eq('state', "reserved")
+
+  return [{id: 'reserved', value: reserved, color:"#4318FF"},{id: 'done', value: done, color:"#FFA3F6"},{id: 'cancelled', value: can, color:"#00CFB1"}];
+
 }

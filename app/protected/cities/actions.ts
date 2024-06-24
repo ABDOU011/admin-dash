@@ -4,7 +4,7 @@ import { createClient } from "@/utils/supabase/server";
 import { data } from "autoprefixer";
 import HotSpots from '@/components/Hotspots';
 
-export async function save(city:any,prov:any,streets:any,stops:any,hotspots:any){
+export async function save(city:any,provenance:any,streets:any,stops:any,hotspot:any){
     const supabase = createClient();
     const { data, error } = await supabase
           .from('cities')
@@ -20,7 +20,7 @@ export async function save(city:any,prov:any,streets:any,stops:any,hotspots:any)
         console.log(error)
       }
       else {
-        const mergedArray = mergeData(prov, streets, cityId);
+        const mergedArray = mergeData(provenance, streets, cityId);
         const { data, error } = await supabase
           .from('places')
           .insert(mergedArray)
@@ -29,15 +29,15 @@ export async function save(city:any,prov:any,streets:any,stops:any,hotspots:any)
             console.log(error.message)
           }
           else{
-            for( const hotspot of hotspots){
+            for( const hots of hotspot){
               const { data:hot, error:herror } = await supabase
           .from('hotspots')
-          .insert({ name: hotspot.name, city: cityId })
+          .insert({ name: hots.name, city: cityId })
           .select('id')
           const { data:place, error:perror } = await supabase
           .from('places')
           .update({ hotspot: hot?.[0].id})
-          .eq('street', hotspot.place)
+          .eq('street', hots.place)
           if(perror){
             console.log("hotspot error")
             console.log(perror.message)
@@ -82,9 +82,9 @@ export async function save(city:any,prov:any,streets:any,stops:any,hotspots:any)
     
     const supabase = createClient()
     try {
-      console.log(hotspot)
-      const provadd: {id?:number,name:string, numstreet:number}[]=[]
-      const streetadd: { [key: number]: { id?: number, name: string, numberOfStops: number }[] } = {};
+      
+      const provadd: {id?:number,name:string,namear:string, numstreet:number}[]=[]
+      const streetadd: { [key: number]: { id?: number, name: string,namear:string, numberOfStops: number }[] } = {};
       const stopadd: { [key: string]: {id?:number, longitude: number, latitude: number }[] } = {};
 
       let nextKey = 0;
@@ -94,7 +94,7 @@ export async function save(city:any,prov:any,streets:any,stops:any,hotspots:any)
       const cityId= city.id;
       const { error: cityError } = await supabase
         .from('cities')
-        .update({ name: city.name,number:city.number })
+        .update({ name: city.name+" | "+city?.namear,number:city.number })
         .eq('id', city.id);
   
       if (cityError) throw cityError;
@@ -111,7 +111,7 @@ export async function save(city:any,prov:any,streets:any,stops:any,hotspots:any)
           
         const { error: provenanceError } = await supabase
           .from('places')
-          .update({ provenance: provenance.name })
+          .update({ provenance: provenance.name+" | "+provenance?.namear })
           .eq('provenance', data?.[0].provenance);
           
           if (provenanceError) {
@@ -134,7 +134,7 @@ export async function save(city:any,prov:any,streets:any,stops:any,hotspots:any)
 
               const { error: sterror } = await supabase
                 .from('places')
-                .update({ street: street.name })
+                .update({ street: street.name+" | "+street?.namear })
                 .eq('id', street.id);
               
               if (sterror) {
@@ -145,7 +145,7 @@ export async function save(city:any,prov:any,streets:any,stops:any,hotspots:any)
             }
           })   )
           :(
-            streets[provIndex].forEach((street: { id?: number | undefined; name: string; numberOfStops: number; }) => {
+            streets[provIndex].forEach((street: { id?: number | undefined; name: string;namear:string, numberOfStops: number; }) => {
               if (!streetadd[nextKey]) {
                   streetadd[nextKey] = [];
               }
@@ -564,7 +564,7 @@ export async function fetchStops(id:any) {
     return;
   }
   const result = data.map(({ id, street }) => ({ id, label: street }));
-  
+  console.log("aaa",result)
   return result;
   
   } catch (error) {
@@ -595,9 +595,7 @@ export async function fetchCities() {
 export async function fetchS(id:any) {
   const supabase = createClient()
 
-  // Start a transaction
   try {
-    
   const { data,error: stopsError } = await supabase
     .from('places')
     .select('*')
@@ -636,17 +634,54 @@ export async function fetchS(id:any) {
   
 }
 
+export async function fetch(id:any) {
+  const supabase = createClient()
+
+  try {
+  const { data,error: stopsError } = await supabase
+    .from('places')
+    .select('hotspot')
+    .eq('city', id);
+    
+  if (stopsError) {
+    console.log('Error deleting stops:', stopsError.message);
+    return;
+  }
+  let count=0
+  const { data:city,error } = await supabase
+    .from('cities')
+    .select('name')
+    .eq('id', id)
+    .single()
+
+    for(const hot of data){
+      if(hot.hotspot != null){
+        count++
+    }
+  }
+    return {count:count,name:city?.name}
+  
+  
+  
+  } catch (error) {
+    return  error
+  }
+  
+}
+
 export async function fetchCityData(cityId: string) {
   const supabase = createClient(); // assuming you have a Supabase client instance
 
   try {
-    const { data: city, error: cityError } = await supabase
+    const { data: city2, error: cityError } = await supabase
      .from('cities')
      .select('id,name, number')
      .eq('id', cityId)
      .single();
 
     if (cityError) throw cityError;
+    const names=city2.name.split(" | ");
+    const city = {id:city2.id,name:names[0],namear:names[1],number:city2.number}
 
     const { data: provenancesData, error: provenancesError } = await supabase
      .from('places')
@@ -665,15 +700,18 @@ export async function fetchCityData(cityId: string) {
     
     const hotspots = hotspot.map( (hot) => {
       const place = provenancesData.find((p) => p.hotspot === hot.id);
+      const names=hot.name.split(" | ");
 
       const imagePath =  supabase.storage
       .from('hotspots')
-      .getPublicUrl(`${hot?.name}/cover.png`);
+      .getPublicUrl(`${names[0]}/cover.png`);
+      
     
    
       return {
         id:hot.id,
-        name: hot.name,
+        name: names[0],
+        namear: names[1],
         image: imagePath?.data?.publicUrl,
         place : place?.street
       };
@@ -689,9 +727,12 @@ export async function fetchCityData(cityId: string) {
     
     const provenances = uniqueProvenances.map((provenance:any) => {
       const { id } = provenancesData.find((p) => p.provenance === provenance) || {};
+      const names=provenance.split(" | ");
+      
       return {
         id,
-        name: provenance,
+        name: names[0],
+        namear: names[1],
         numstreet: provenanceCounts[provenance],
       };
     });
@@ -726,7 +767,10 @@ const streetsGroupedByProvenance = provenancesData.reduce((acc: any, current: an
   if (!acc[current.provenance]) {
     acc[current.provenance] = [];
   }
-  acc[current.provenance].push({ id:current.id,name: current.street, numberOfStops: numOfStops });
+  const names=current.street.split(" | ");
+
+  acc[current.provenance].push({ id:current.id,name: names[0],
+    namear: names[1], numberOfStops: numOfStops });
   return acc;
 }, {});
 
@@ -759,10 +803,136 @@ const stops = Object.keys(streetsGroupedByProvenance).reduce((acc: any, provenan
       stops,
       hotspots
     };
+
   } catch (error) {
     console.error('Error fetching city data:', error);
     throw error;
   }
 }
 
+export async function history(){
+  const supabase = createClient();
+  const {data, error} = await supabase.from("admin_cities_log").select("*").order("created_at", { ascending: false });
+  if (error) { 
+    console.error(error);
+    return;
+  }
+  const logs:any = []
+  for(const city of data){
+    const cities:any = []
+    for(const id of city.cities){
+      const {data, error} = await supabase.from("cities").select("name").eq("id", id);
+      cities.push(data?.[0].name)
+    }
+    const {data:it, error} = await supabase.from("itineraries").select("user").eq("id", city.itinerary);
+    const {data} = await supabase.from("profiles").select("name").eq("id", it?.[0].user);
+    
+    const log = {
+      name: data?.[0].name,
+      cities: cities,
+      created_at: city.created_at
+    }
+    logs.push(log)
+  }
+  
+  return logs
+}
 
+export async function piechart(){
+  const supabase = createClient();
+ 
+ 
+
+  const { data } = await supabase
+  .from("reservations")
+  .select('id,route')
+  .in('state', ['done', 'cleared',"reserved"])
+  let bus = 0;
+  let train = 0;
+  let taxi = 0;
+  for (const reservation of data!) {
+    const {data:it, error} = await supabase.from("routes").select("type").eq("id", reservation.route).single();
+    if(it?.type === "bus"){
+      bus += 1
+    }else if(it?.type === "train"){
+      train += 1
+    }else if(it?.type === "taxi"){
+      taxi += 1
+    }
+  }
+  return {bus:bus,train:train,taxi:taxi,total:bus+train+taxi}
+}
+
+export async function chart(){
+  const supabase = createClient();
+ 
+ 
+
+  const { data } = await supabase
+  .from("itineraries")
+  .select('id,seats,to')
+  .in('state', ['done', 'planned'])
+  let seats = 0;
+  const places:any = []
+  for (const reservation of data!) {
+    const {data:it, error} = await supabase.from("places").select("street").eq("id", reservation.to).single();
+    places.push({name:it?.street,seats:reservation.seats})
+    seats += reservation.seats
+  }
+
+  const result = places.reduce((acc:any, current:any) => {
+    const existingIndex = acc.findIndex((item: { name: any; }) => item.name === current.name);
+    if (existingIndex!== -1) {
+      acc[existingIndex].seats += current.seats;
+    } else {
+      acc.push(current);
+    }
+    return acc;
+  }, []);
+  const labels = result.map((item: { name: any; }) => item.name);
+  const values = result.map((item: { seats: any; }) => item.seats);
+  
+
+  
+  return {
+    labels:labels,
+    values:values,
+    total:seats}
+  
+}
+
+export async function chart2(){
+  const supabase = createClient();
+
+  const { data } = await supabase
+  .from("itineraries")
+  .select('id,seats,to')
+  .in('state', ['done', 'planned'])
+  
+  const places:any = []
+  for (const reservation of data!) {
+    const {data:it, error} = await supabase.from("places").select("city").eq("id", reservation.to).single();
+    places.push({id:it?.city,value:0,name:""})
+    
+  }
+
+  const result = places.reduce((acc:any, current:any) => {
+    const existingIndex = acc.findIndex((item: { id: any; }) => item.id === current.id);
+    
+    if (existingIndex!== -1) {
+      acc[existingIndex].value += 1;
+    } else {
+      acc.push(current);
+    }
+    return acc;
+  }, []);
+  
+  for(const item of result){
+    const {data:it, error} = await supabase.from("cities").select("name").eq("id", item.id).single();
+    item.name = it?.name
+  }
+
+  return {result:result,total:(places?.length-1)}
+
+  
+}

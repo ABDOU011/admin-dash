@@ -12,6 +12,7 @@ interface HotspotFormProps {
       {
         id?: number;
         name: string;
+        namear: string;
         image: string | null;
         place: number | string;
       }[]
@@ -20,14 +21,15 @@ interface HotspotFormProps {
   hotspot: {
     id?: number;
     name: string;
+    namear: string;
     image: string | null;
     place: number | string;
   }[];
   streets: {
-    [key: number]: { id?: number; name: string; numberOfStops: number }[];
+    [key: number]: { id?: number; name: string;namear: string; numberOfStops: number }[];
   };
   cityID?: number;
-  provenances: { id?: number; name: string; numstreet: number }[];
+  provenances: { id?: number; name: string;namear: string; numstreet: number }[];
 }
 
 const HotspotForm: React.FC<HotspotFormProps> = ({
@@ -67,14 +69,14 @@ const HotspotForm: React.FC<HotspotFormProps> = ({
       provenances.map((provenance, provIndex) =>
         streets[provIndex]?.map((street, streetIndex) =>
           result.push({
-            label: street.name,
+            label: street.name+" - "+street.namear,
           })
         )
       );
       setSearchResults(result);
     }
   }, [hotspot, streets]);
-  console.log(hotspot);
+  
   const handleImageChange = (
     e: React.ChangeEvent<HTMLInputElement>,
     index: number
@@ -97,11 +99,11 @@ const HotspotForm: React.FC<HotspotFormProps> = ({
     }
   };
   const handleAddProvenance = () => {
-    setHotspot([...hotspot, { place: 0, image: null, name: "" }]);
+    setHotspot([...hotspot, { place: 0, image: null, name: "" ,namear:""}]);
   };
   const handleRemoveProvenance = (index: number, id?: any) => {
-    if(id){
-      deleteHotspot(id)
+    if (id) {
+      deleteHotspot(id);
     }
     const updatedHotspots = [...hotspot];
     updatedHotspots.splice(index, 1);
@@ -110,7 +112,7 @@ const HotspotForm: React.FC<HotspotFormProps> = ({
 
   const [value, setValue] = useState<boolean[]>([...hotspot].map(() => false));
 
-  console.log(value);
+  
   return (
     <div className="w-full">
       {hotspot.map((hot, index) => (
@@ -128,7 +130,7 @@ const HotspotForm: React.FC<HotspotFormProps> = ({
                       {hot.name}
                     </p>
                     <p className="font-medium text-[14px] text-[#1B1E28] opacity-50">
-                      {hot.place.toString()}
+                      {hot?.place?.toString()}
                     </p>
                   </div>
                   <div className="flex flex-row items-center px-[20px] py-0 gap-[12px] mx-[auto] my-[0] w-[76px] h-[12px] opacity-50">
@@ -143,7 +145,11 @@ const HotspotForm: React.FC<HotspotFormProps> = ({
                     >
                       <EditIcon style={{ height: 24, width: 24 }}></EditIcon>
                     </button>
-                    <button onClick={() => {handleRemoveProvenance(index, hot.id!)}}>
+                    <button
+                      onClick={() => {
+                        handleRemoveProvenance(index, hot.id!);
+                      }}
+                    >
                       <DeleteIcon
                         style={{ height: 24, width: 24 }}
                       ></DeleteIcon>
@@ -152,25 +158,44 @@ const HotspotForm: React.FC<HotspotFormProps> = ({
                 </div>
               </div>
             </div>
-          ) :  !value[index] ? (
+          ) : !value[index] ? (
             <div className="flex flex-col mb-4 justify-center items-center p-[8px] gap-[10px] bg-[#E4E4E4] rounded-[16px] w-full">
-              <div className=" flex flex-row gap-[12px] w-full text-black">
-                <input
-                  value={hot?.name}
-                  onChange={(e) =>
-                    handleChange(index, e.target.name, e.target.value)
-                  }
-                  type="text"
-                  required
-                  name="name"
-                  placeholder="Name"
-                  className="text-black pl-4 w-full h-[50px] border-[1px] border-[solid] border-[#E4E4E4] rounded-[16px]"
-                />
+              <div className=" flex flex-col gap-[12px] w-full text-black">
+                <div className="flex flex-row gap-1">
+                  <div className="flex flex-col justify-center items-start gap-[4px] w-full">
+                    <label className="text-black">Hotspot Name</label>
+                    <input
+                      value={hot?.name}
+                      onChange={(e) =>
+                        handleChange(index, e.target.name, e.target.value)
+                      }
+                      type="text"
+                      required
+                      name="name"
+                      placeholder="Name"
+                      className="text-black pl-4 w-full h-[50px] border-[1px] border-[solid] border-[#E4E4E4] rounded-[16px]"
+                    />
+                  </div>
+                  <div className="flex flex-col justify-center items-start gap-[4px] w-full">
+                    <label className="text-black">Hotspot Arabic Name</label>
+                    <input
+                      value={hot?.namear}
+                      onChange={(e) =>
+                        handleChange(index, e.target.name, e.target.value)
+                      }
+                      type="text"
+                      required
+                      name="namear"
+                      placeholder="Arab Name"
+                      className="text-black pl-4 w-full h-[50px] border-[1px] border-[solid] border-[#E4E4E4] rounded-[16px]"
+                    />
+                  </div>
+                </div>
                 <div className=" flex flex-col justify-center items-start gap-[12px] w-full ">
                   <Select
                     className="text-black w-full"
                     required
-                    placeholder={hot.place.toString()}
+                    placeholder={hot?.place?.toString()}
                     options={searchResults}
                     onChange={(newValue) => {
                       handleChange(index, "place", newValue?.label);
@@ -220,31 +245,27 @@ const HotspotForm: React.FC<HotspotFormProps> = ({
                 )}
               </div>
               <div className="flex flex-row items-end justify-end gap-2 w-full">
-                {
-                hot.id ? (
+                {hot.id ? (
                   <button
-                  className="flex flex-row justify-center items-center p-0 w-[160px] gap-[10px]  my-[0] h-[56px] bg-[#F4F7FE] text-black border-[1px] border-[solid] border-[#E4E4E4] rounded-[16px]"
-                  onClick={() =>
-                    setValue((prevValue) => {
-                      const newValue = [...prevValue];
-                      newValue[index] = true;
-                      return newValue;
-                    })
-                  }
-                >
-                  Cancel
-                </button>
-                ):(
+                    className="flex flex-row justify-center items-center p-0 w-[160px] gap-[10px]  my-[0] h-[56px] bg-[#F4F7FE] text-black border-[1px] border-[solid] border-[#E4E4E4] rounded-[16px]"
+                    onClick={() =>
+                      setValue((prevValue) => {
+                        const newValue = [...prevValue];
+                        newValue[index] = true;
+                        return newValue;
+                      })
+                    }
+                  >
+                    Cancel
+                  </button>
+                ) : (
                   <button
-                  className="flex flex-row justify-center items-center p-0 w-[160px] gap-[10px]  my-[0] h-[56px] bg-[#F4F7FE] text-black border-[1px] border-[solid] border-[#E4E4E4] rounded-[16px]"
-                  onClick={() =>
-                    handleRemoveProvenance(index)
-                  }
-                >
-                  Remove
-                </button>
-                )
-                }
+                    className="flex flex-row justify-center items-center p-0 w-[160px] gap-[10px]  my-[0] h-[56px] bg-[#F4F7FE] text-black border-[1px] border-[solid] border-[#E4E4E4] rounded-[16px]"
+                    onClick={() => handleRemoveProvenance(index)}
+                  >
+                    Remove
+                  </button>
+                )}
                 <button
                   className="flex flex-row justify-center items-center p-0 w-[160px] gap-[10px]  my-[0] h-[56px] bg-[#24BAEC] rounded-[16px]"
                   onClick={() =>
@@ -264,7 +285,10 @@ const HotspotForm: React.FC<HotspotFormProps> = ({
           )}
         </div>
       ))}
-      <button onClick={handleAddProvenance} className="flex flex-row justify-center items-center gap-[10px] border-[1px] border-[solid] border-[#E4E4E4] rounded-[16px] w-[566px] h-[56px] text-[#24BAEC]">
+      <button
+        onClick={handleAddProvenance}
+        className="flex flex-row justify-center items-center gap-[10px] border-[1px] border-[solid] border-[#E4E4E4] rounded-[16px] w-[566px] h-[56px] text-[#24BAEC]"
+      >
         Add Another Hotspot
       </button>
     </div>

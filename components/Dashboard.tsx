@@ -1,38 +1,55 @@
 "use client";
 import { useEffect, useRef, useState } from "react";
-
+import Userslogo from "../components/icons/Userslogo";
+import ActiveUserslogo from "./icons/ActiveUserslogo";
+import NewUserslogo from "./icons/NewUserslogo";
+import { LineChart } from "@mui/x-charts/LineChart";
 import { PieChart } from "@mui/x-charts/PieChart";
-import LogoutOutlinedIcon from "@mui/icons-material/LogoutOutlined";
 import {
   monthchart,
   newUsers,
   usersCount,
-  
-  signout,
+  history,
+  revenuechart,
+  piechart,
 } from "@/app/protected/users/actions/actions";
-import { BarChart } from "@mui/x-charts";
-import { piechart } from "@/app/protected/cities/actions";
-import { chart, history } from "@/app/protected/routes/actions";
+import Select from "react-select";
 
-export default function ROverview({}: {}) {
-  const xLabels = [
-    "14",
-    "14C",
-    "14B",
-    "14A",
-    "A1",
-    "OM",
-    "IM",
+export default function Dashboard({}: {}) {
+  const [searchResults, setSearchResults] = useState<
+    { value?: number; label: string }[]
+  >([
+    { value: 1, label: "Jan" },
+    { value: 2, label: "Feb" },
+    { value: 3, label: "Mar" },
+    { value: 4, label: "Apr" },
+    { value: 5, label: "May" },
+    { value: 6, label: "June" },
+    { value: 7, label: "July" },
+    { value: 8, label: "Aug" },
+    { value: 9, label: "Sept" },
+    { value: 10, label: "Oct" },
+    { value: 11, label: "Nov" },
+    { value: 12, label: "Dec" },
+  ]);
 
-  ];
-  const data = [14, 25, 33, 19, 15, 27, 24];
+  const getDaysInMonth = (month: number) => {
+    const d = new Date().getFullYear();
+    const date = new Date(Date.UTC(d, month, 0));
+    return Array.from({ length: date.getUTCDate() }, (_, i) =>
+      (i + 1).toString()
+    );
+  };
+
   const [newusers, setNewUsers] = useState<any>(0);
   const [totalusers, setTotalUsers] = useState<any>(0);
   const [linedata, setLineData] = useState<any>();
+  const [linedata2, setLineData2] = useState<any>();
   const [histo, setHistory] = useState<any>();
   const [histo2, setHistory2] = useState<any>();
-  
-  
+  const maxCount = Math.max(...(linedata ? linedata : []));
+  const [month, setMonth] = useState<any>(new Date().getMonth() + 1);
+  const maxIndex = linedata?.indexOf(maxCount);
 
   const timeoutRef = useRef<NodeJS.Timeout | null>(null);
 
@@ -41,18 +58,19 @@ export default function ROverview({}: {}) {
     setNewUsers(newU);
     const totalU = await usersCount();
     setTotalUsers(totalU);
-    const line = await chart();
+    const line = await monthchart();
     setLineData(line);
+    const line2 = await revenuechart(month);
+    setLineData2(line2);
     const hist = await history();
     setHistory(hist);
     const hist2 = await piechart();
     setHistory2(hist2);
-    
   };
 
   useEffect(() => {
     fetchData();
-  }, []);
+  }, [month]);
 
   useEffect(() => {
     async function runHistoryCode() {
@@ -60,7 +78,7 @@ export default function ROverview({}: {}) {
       historyList.classList.add("flex", "flex-col", "gap-2");
 
       histo?.forEach(
-        (item: { route: any; name: any; created_at: any,seats:any }) => {
+        (item: { admin_name: any; name: any; created_at: any }) => {
           const historyItem = document.createElement("div");
           historyItem.classList.add("flex", "flex-row", "gap-2");
 
@@ -69,37 +87,21 @@ export default function ROverview({}: {}) {
 
           const name = document.createElement("span");
           name.classList.add("text-[#24BAEC]");
-          name.textContent = `${item.route}`;
+          name.textContent = `${item.name}`;
 
           const admin = document.createElement("span");
-          admin.textContent = `User `;
-          const ad = document.createElement("span");
-          ad.textContent = `On `;
+          admin.textContent = `Admin `;
 
           const admin1 = document.createElement("span");
           admin1.classList.add("text-[#24BAEC]");
-          admin1.textContent = `${item.name} `;
-
-          const admin3 = document.createElement("span");
-          admin3.classList.add("text-[#24BAEC]");
-
-          if(item.seats>1){
-            
-          admin3.textContent = `${item.seats} Seats `;
-          }
-          else{
-            
-          admin3.textContent = `${item.seats} Seat `;
-          }
+          admin1.textContent = `${item.admin_name} `;
 
           const admin2 = document.createElement("span");
-          admin2.textContent = `Reserved `;
+          admin2.textContent = `has just created a new user `;
 
           adminName.appendChild(admin);
           adminName.appendChild(admin1);
           adminName.appendChild(admin2);
-          adminName.appendChild(admin3);
-          adminName.appendChild(ad);
           adminName.appendChild(name);
 
           const timeAgo = document.createElement("p");
@@ -144,20 +146,83 @@ export default function ROverview({}: {}) {
       return `${seconds} seconds ago`;
     }
   }
+  const daysInMonth = getDaysInMonth(month);
+  const extractRevenue = () => {
+    if (!linedata2) return [];
+    const data = linedata2.map((d: any) => d.revenue);
+    return data;
+  };
+  const total = linedata2?.[0].total_revenue;
 
-  
+  const revenues = extractRevenue();
+  const pietotal = histo2?.[0].value + histo2?.[1].value + histo2?.[2].value;
+
   return (
     <div className="flex flex-col items-center pt-0 px-[24px] pb-[80px] gap-[24px] w-full">
-      <div className="flex flex-row items-start px-[32px] py-[24px] gap-[64px] bg-[#FFFFFF] border-[1px] border-[solid] border-[#E4E4E4] rounded-[16px]">
-        <div className="flex flex-col gap-2">
-          <h1 className="text-black text-3xl">{linedata?.total}</h1>
-          <h3 className="text-black opacity-50 text-[12px]">Seats reserved</h3>
+      <div className="flex flex-row justify-between w-full">
+        <div className="items-start px-[24px] py-[20px]  w-[290.67px] h-[80px] bg-[#FFFFFF] border-[0.6px] border-[solid] border-[#E4E4E4] rounded-[16px]">
+          <div className="flex flex-row gap-3">
+            <Userslogo></Userslogo>
+            <div className="flex flex-col justify-center">
+              <p className="font-medium text-[16px] text-[#1B1E28]">
+                Total Users
+              </p>
+              <p className="font-normal text-[12px] text-[#1B1E28] opacity-75">
+                {totalusers}
+              </p>
+            </div>
+          </div>
         </div>
-        <BarChart
-          xAxis={[{ data: linedata? linedata?.labels : [], scaleType: "band" }]}
+        <div className="items-start px-[24px] py-[20px]  w-[290.67px] h-[80px] bg-[#FFFFFF] border-[0.6px] border-[solid] border-[#E4E4E4] rounded-[16px]">
+          <div className="flex flex-row gap-3">
+            <NewUserslogo></NewUserslogo>
+            <div className="flex flex-col justify-center">
+              <p className="font-medium text-[16px] text-[#1B1E28]">
+                Transportation Health
+              </p>
+              <p className="font-normal text-[12px] text-[#00B499] opacity-75">
+                Healthy
+              </p>
+            </div>
+          </div>
+        </div>
+        <div className="items-start px-[24px] py-[20px]  w-[290.67px] h-[80px] bg-[#FFFFFF] border-[0.6px] border-[solid] border-[#E4E4E4] rounded-[16px]">
+          <div className="flex flex-row gap-3">
+            <ActiveUserslogo></ActiveUserslogo>
+            <div className="flex flex-col justify-center">
+              <p className="font-medium text-[16px] text-[#1B1E28]">
+                Online Payments
+              </p>
+              <p className="font-normal text-[12px] text-[#00B499] opacity-75">
+                {newusers}%
+              </p>
+            </div>
+          </div>
+        </div>
+      </div>
+      <div className="flex flex-row items-start px-[32px] py-[24px] gap-[64px] bg-[#FFFFFF] border-[1px] border-[solid] border-[#E4E4E4] rounded-[16px]">
+        <div className="flex flex-col gap-6">
+          <Select
+            className="text-black w-full"
+            required
+            placeholder={
+              searchResults.find((result) => result.value === Number(month))
+                ?.label
+            }
+            options={searchResults}
+            onChange={(NewValue) => {
+              setMonth(NewValue?.value);
+              fetchData();
+            }}
+          />
+          <h1 className="text-black text-3xl">{total} DA</h1>
+          <h4 className="text-black">Total Revenue</h4>
+        </div>
+        <LineChart
+          xAxis={[{ data: daysInMonth ? daysInMonth : [], scaleType: "point" }]}
           series={[
             {
-              data: linedata? linedata?.values : [], // data: linedata ? linedata : [],
+              data: revenues.length > daysInMonth.length ? [] : revenues,
             },
           ]}
           width={780}
@@ -169,7 +234,7 @@ export default function ROverview({}: {}) {
         <div className="flex flex-col items-start w-[556px] px-[16px] py-[24px] gap-[16px] bg-[#FFFFFF] border-[1px] border-[solid] border-[#E4E4E4] rounded-[16px]">
           <div className="flex flex-row justify-between w-full">
             <p className="font-semibold text-[16px] text-[#1B1E28]">
-              Reservations logs
+              Users activities logs
             </p>
             <button
               onClick={() => {
@@ -188,18 +253,14 @@ export default function ROverview({}: {}) {
         <div className="flex flex-col items-center w-[360px] px-[16px] py-[24px] gap-[16px] bg-[#FFFFFF] border-[1px] border-[solid] border-[#E4E4E4] rounded-[16px]">
           <div className="flex flex-row justify-between w-full">
             <p className="font-semibold text-[16px] text-[#1B1E28]">
-              Reservations Pie Chart
+              Users activities logs
             </p>
             <button className="text-[12px] text-black opacity-50">today</button>
           </div>
           <PieChart
             series={[
               {
-                data: [
-                  { id: 0, value: histo2?.bus, color: "#4318FF" },
-                  { id: 1, value: histo2?.train, color: "#FFA3F6" },
-                  { id: 1, value: histo2?.taxi, color: "#00CFB1" },
-                ],
+                data: histo2? histo2 : [],
               },
             ]}
             width={350}
@@ -210,29 +271,32 @@ export default function ROverview({}: {}) {
             <div className="flex flex-col ">
               <div className="flex flex-row gap-1 items-center">
                 <div className="w-2 h-2 rounded-full bg-[#4318FF]"></div>
-                <p className="text-[12px] text-[#1B1E28] opacity-70">Buses</p>
+                <p className="text-[12px] text-[#1B1E28] opacity-70">
+                  Reserved
+                </p>
               </div>
               <p className="font-bold text-[18px] text-[#1B1E28] opacity-70">
-              {Math.trunc((100 * histo2?.bus) / histo2?.total)}%
+                {Math.trunc((100 * histo2?.[0].value) / pietotal)}%
               </p>
             </div>
             <div className="flex flex-col ">
               <div className="flex flex-row gap-1 items-center">
                 <div className="w-2 h-2 rounded-full bg-[#FFA3F6]"></div>
-                <p className="text-[12px] text-[#1B1E28] opacity-70">Trains</p>
+                <p className="text-[12px] text-[#1B1E28] opacity-70">Done</p>
               </div>
               <p className="font-bold text-[18px] text-[#1B1E28] opacity-70">
-              {Math.trunc((100 * histo2?.train) / histo2?.total)}%
+                {Math.trunc((100 * histo2?.[1].value) / pietotal)}%
               </p>
             </div>
-
             <div className="flex flex-col ">
               <div className="flex flex-row gap-1 items-center">
                 <div className="w-2 h-2 rounded-full bg-[#00CFB1]"></div>
-                <p className="text-[12px] text-[#1B1E28] opacity-70">Taxis</p>
+                <p className="text-[12px] text-[#1B1E28] opacity-70">
+                  Cancelled
+                </p>
               </div>
               <p className="font-bold text-[18px] text-[#1B1E28] opacity-70">
-              {Math.trunc((100 * histo2?.taxi) / histo2?.total)}%
+                {Math.trunc((100 * histo2?.[2].value) / pietotal)}%
               </p>
             </div>
           </div>

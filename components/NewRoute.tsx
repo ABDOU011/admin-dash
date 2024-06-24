@@ -32,7 +32,7 @@ type NewCityProps = {
 
 export default function NewRoute({ routeId }: NewCityProps) {
     const [currentSegment, setCurrentSegment] = useState<string>('Line');
-    const [line, setLine] = useState<{id?:number,name:string,acr:string,city:string, type:string,stype:string} | null>(null);
+    const [line, setLine] = useState<{id?:number,name:string,namear:string,acr:string,acrar:string,city:string, type:string,stype:string} | null>(null);
     
     const [stops, setStops] = useState<{id?:number,value:number, label: string}[] >([]);
 

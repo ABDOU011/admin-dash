@@ -44,8 +44,8 @@ export async function updateRoute(
       .from("routes")
       .update({
         type: line?.type,
-        acronym: line?.acr,
-        name: line?.name,
+        acronym: line?.acr+" | "+line.acrar,
+        name: line?.name+" | "+line.namear,
         stops: stopValues,
         schedule: scid,
         rotation: null,
@@ -89,8 +89,8 @@ export async function updateRoute(
       .from("routes")
       .update({
         type: line?.type,
-        acronym: line?.acr,
-        name: line?.name,
+        acronym: line?.acr+" | "+line.acrar,
+        name: line?.name+" | "+line.namear,
         stops: stopValues,
         schedule: null,
         rotation: roid,
@@ -121,8 +121,8 @@ else{
       .from("routes")
       .update({
         type: line?.type,
-        acronym: line?.acr,
-        name: line?.name,
+        acronym: line?.acr+" | "+line.acrar,
+        name: line?.name+" | "+line.namear,
         stops: stopValues,
         
         seats_count: other.seats,
@@ -245,9 +245,9 @@ export async function saveRoute(
   const { data, error } = await supabase
     .from("routes")
     .insert({
-      name: line.name,
+      name: line.name+" | "+line.namear,
       type: line.type.toLowerCase(),
-      acronym: line.acr,
+      acronym: line.acr+" | "+line.acrar,
       stops: stopValues,
       busy: 25,
       schedule: sch,
@@ -419,11 +419,14 @@ export async function fetchRouteData(Id: string) {
       .single();
 
     const cityid = c?.city;
-
+    const names=route.name.split(" | ");
+    const names2=route.acronym.split(" | ");
     const line = {
-      name: route?.name,
+      name: names[0],
+      namear:names[1],
       id: route?.id,
-      acr: route?.acronym,
+      acr: names2[0],
+      acrar:names2[1],
       city: cityid,
       type: route?.type,
       stype: route?.rotation ? "Rotation" : "Scheduled",
@@ -508,4 +511,65 @@ export async function fetchRouteData(Id: string) {
     console.error("Error fetching city data:", error);
     throw error;
   }
+}
+
+export async function history(){
+  const supabase = createClient();
+  const {data, error} = await supabase.from("reservations").select("*").order("created_at", { ascending: false });
+  if (error) { 
+    console.error(error);
+    return;
+  }
+  const logs:any = []
+  for(const city of data){
+    const cities:any = []
+    
+    const {data:it, error} = await supabase.from("profiles").select("name").eq("id", city.user).single();
+    const {data} = await supabase.from("routes").select("name").eq("id", city.route).single();
+    
+    const log = {
+      name: it?.name,
+      seats:city.seats,
+      created_at: city.created_at,
+      route: data?.name,
+    }
+    logs.push(log)
+  }
+  
+  return logs
+}
+
+export async function chart(){
+  const supabase = createClient();
+ 
+  const { data } = await supabase
+  .from("reservations")
+  .select('id,route,seats')
+  .in('state', ['done','cleared',"reserved"])
+
+  let seats = 0;
+  const places:any = []
+  for (const reservation of data!) {
+    const {data:it, error} = await supabase.from("routes").select("name").eq("id", reservation.route).single();
+    places.push({name:it?.name,seats:reservation.seats})
+    seats += reservation.seats
+  }
+  const result = places.reduce((acc:any, current:any) => {
+    const existingIndex = acc.findIndex((item: { name: any; }) => item.name === current.name);
+    if (existingIndex!== -1) {
+      acc[existingIndex].seats += current.seats;
+    } else {
+      acc.push(current);
+    }
+    return acc;
+  }, []);
+  const labels = result.map((item: { name: any; }) => item.name);
+  const values = result.map((item: { seats: any; }) => item.seats);
+  
+  return {
+    labels:labels,
+    values:values,
+    total:seats}
+
+  
 }

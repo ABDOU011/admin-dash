@@ -3,7 +3,7 @@
 import React,{ useEffect, useRef, useState } from "react";
 import { ToastContainer, toast } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
-import { deleteCity } from "@/app/protected/cities/actions";
+import { deleteCity, fetch } from "@/app/protected/cities/actions";
 import Modal from "react-modal";
 import {
   monthchart,
@@ -23,14 +23,15 @@ export default function City(): JSX.Element {
   const [newusers, setNewUsers] = useState<number>(0);
   const [totalusers, setTotalUsers] = useState<number>(0);
   const [linedata, setLineData] = useState<number[] | undefined>(undefined);
-  const [histo, setHistory] = useState<number[] | undefined>(undefined);
+  const [histo, setHistory] = useState<any>();
   const maxCount = Math.max(...(linedata ? linedata : []));
   const router = useRouter();
   const searchParams = useSearchParams();
   const i = searchParams?.get("id");
 
   const fetchData = async () => {
-    
+    const data = await fetch(i);
+    setHistory(data);
   };
 
   useEffect(() => {
@@ -70,46 +71,28 @@ export default function City(): JSX.Element {
             <p className=" font-medium text-[16px] text-[#1B1E28] opacity-[0.56]">
               City Name
             </p>
-            <p className=" font-semibold text-[20px] text-[#1B1E28]">Name</p>
+            <p className=" font-semibold text-[20px] text-[#1B1E28]">{histo?.name}</p>
           </div>
           <div className="flex flex-col justify-center items-center p-0 gap-[8px]">
             <p className=" font-medium text-[16px] text-[#1B1E28] opacity-[0.56]">
               Hotspots
             </p>
-            <p className=" font-semibold text-[20px] text-[#1B1E28]">XX</p>
+            <p className=" font-semibold text-[20px] text-[#1B1E28]">{histo?.count}</p>
           </div>
           <div className="flex flex-col justify-center items-center p-0 gap-[8px]">
             <p className=" font-medium text-[16px] text-[#1B1E28] opacity-[0.56]">
               Avg Reservation per Day
             </p>
-            <p className=" font-semibold text-[20px] text-[#1B1E28]">XX</p>
+            <p className=" font-semibold text-[20px] text-[#1B1E28]">5</p>
           </div>
           <div className="flex flex-col justify-center items-center p-0 gap-[8px]">
             <p className=" font-medium text-[16px] text-[#1B1E28] opacity-[0.56]">
               trasportation Health
             </p>
-            <p className=" font-semibold text-[20px] text-[#1B1E28]">XXX</p>
+            <p className=" font-semibold text-[20px] text-[#1B1E28]">Healthy</p>
           </div>
         </div>
-        <div className="flex flex-row items-start px-[32px] py-[24px] gap-[64px] bg-[#FFFFFF] border-[1px] border-[solid] border-[#E4E4E4] rounded-[16px]">
-          <div className="flex flex-col gap-2">
-            <h1 className="text-black text-3xl">2000</h1>
-            <h3 className="text-black opacity-50 text-[12px]">
-              Seats reserved
-            </h3>
-          </div>
-          <BarChart
-            xAxis={[{ data: xLabels, scaleType: "band" }]}
-            series={[
-              {
-                data: data, // data: linedata ? linedata : [],
-              },
-            ]}
-            width={780}
-            height={250}
-            leftAxis={null}
-          />
-        </div>
+        
         <div className="flex flex-row justify-end items-center px-[24px] py-0 gap-[16px] w-full">
           
           <button
