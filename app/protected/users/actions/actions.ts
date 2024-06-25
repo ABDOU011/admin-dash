@@ -25,9 +25,7 @@ export async function addUser(formData: FormData) {
 
   const supabase = createClient();
 
-  const adminId = (await supabase.auth.getUser()).data.user?.id;
-  const {data} = await supabase.from("profiles").select("name").eq('id',adminId);
-  const adminName = data?.[0].name;
+  
 try {
   const { data, error } = await supabase.auth.admin.createUser({
     email,
@@ -70,16 +68,8 @@ try {
   })
   if(error) console.log(error.message)
   else {
-    const { data, error } = await supabase.from("user_creation_history").insert([
-      {
-        name: name,
-        admin_name: adminName,
-      },
-    ]);
-    if (error) {
-      console.log(error.message);
-      return error;
-    }
+    
+    
 }
   }
 }
