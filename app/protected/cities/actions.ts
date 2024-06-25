@@ -532,7 +532,13 @@ export async function deleteHotspot(Id: string) {
 
   // Start a transaction
   try {
+    const { data:name } = await supabase
+    .from('hotspots')
+    .select("*")
+    .eq('id', Id).single()
     
+  
+
   const { error: stopsError } = await supabase
     .from('hotspots')
     .delete()
@@ -541,6 +547,11 @@ export async function deleteHotspot(Id: string) {
     console.log('Error deleting hotspot:', stopsError.message);
     return;
   }
+  const { data, error } = await supabase.storage
+              .from("avatars")
+              .remove([`${name}/cover.png`]);
+
+              
   } catch (error) {
     return  error
   }
@@ -795,7 +806,7 @@ const stops = Object.keys(streetsGroupedByProvenance).reduce((acc: any, provenan
     
     
 
-console.log(stops)
+
     return {
       city,
       provenances,
@@ -932,7 +943,7 @@ export async function chart2(){
     const {data:it, error} = await supabase.from("cities").select("name").eq("id", item.id).single();
     item.name = it?.name
   }
-  console.log(result)
+ 
   return {result:result,total:(places?.length)}
 
   

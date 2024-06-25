@@ -1,7 +1,7 @@
 "use client";
 import React, { useEffect, useRef, useState } from "react";
 import { getUser, updateUser } from "@/app/protected/users/actions/actions";
-import MUIDataTable from "mui-datatables";
+import MUIDataTable, { SelectableRows } from "mui-datatables";
 import Modal from "react-modal";
 import DeleteIcon from "@mui/icons-material/Delete";
 import EditIcon from "@mui/icons-material/Edit";
@@ -180,9 +180,9 @@ export default function CityTable({}: {}) {
     download: false,
     print: false,
     viewColumns: false,
-
+    selectableRows:"none" as SelectableRows,
     searchAlwaysOpen: true,
-    Selection: false,
+    
   };
 
   const getMuiTheme = () =>

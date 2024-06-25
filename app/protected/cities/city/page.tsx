@@ -61,7 +61,7 @@ export default function City(): JSX.Element {
   };
 
   return (
-    <div className="bg-[#F4F7FE] w-full flex flex-col items-start pt-12 h-full">
+    <div className="bg-[#F4F7FE] w-full flex flex-col items-start pt-12 min-h-screen">
       <button className="ml-5 mb-5" onClick={() => router.back()}>
         <ArrowBackIcon className="text-black" />
       </button>
@@ -83,7 +83,7 @@ export default function City(): JSX.Element {
             <p className=" font-medium text-[16px] text-[#1B1E28] opacity-[0.56]">
               Avg Reservation per Day
             </p>
-            <p className=" font-semibold text-[20px] text-[#1B1E28]">5</p>
+            <p className=" font-semibold text-[20px] text-[#1B1E28]">1</p>
           </div>
           <div className="flex flex-col justify-center items-center p-0 gap-[8px]">
             <p className=" font-medium text-[16px] text-[#1B1E28] opacity-[0.56]">

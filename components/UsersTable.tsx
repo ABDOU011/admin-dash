@@ -7,7 +7,7 @@ import {
   updateUser,
   userLogs,
 } from "@/app/protected/users/actions/actions";
-import MUIDataTable from "mui-datatables";
+import MUIDataTable, { SelectableRows } from "mui-datatables";
 import Modal from "react-modal";
 import DeleteIcon from "@mui/icons-material/Delete";
 import EditIcon from "@mui/icons-material/Edit";
@@ -124,7 +124,7 @@ export default function UsersTable({}: {}) {
     viewColumns: false,
 
     searchAlwaysOpen: true,
-    Selection: false,
+    selectableRows:"none" as SelectableRows
   };
 
   const getMuiTheme = () =>

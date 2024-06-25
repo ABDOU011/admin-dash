@@ -213,7 +213,7 @@ export default function NewCity({ cityId }: NewCityProps) {
 
     return result;
   }
-  console.log(hotspot[0].place==="Oran - aaaaaa")
+
   
   const handleSubmit = async () => {
     if (cityId) {
@@ -234,13 +234,47 @@ export default function NewCity({ cityId }: NewCityProps) {
               .from("places")
               .update({ hotspot: hots.id })
               .eq("street", hots.place);
-            if (!isValidURL(hots.image)) {
+            
+            if(names[0]!==hots.name && isValidURL(hots.image)){
+
+              const {data} = await supabase.storage
+              .from("hotspots").download(`${names[0]}/cover.png`);
+
+               await supabase.storage
+              .from("hotspots")
+              .remove([`${names[0]}/cover.png`]);
+
+              console.log(data!)
+
+              const { data: bucket, error: bucketer } = await supabase.storage
+              .from("hotspots")
+              .upload(`${hots?.name}/cover.png`, data!, {
+                contentType: "image/png",
+              });
+              if (bucketer) {
+              console.log(bucketer?.message);
+              }
+              
+            }else if(names[0]!==hots.name && !isValidURL(hots.image)){
+              supabase.storage
+              .from("avatars")
+              .remove([`${names[0]}/cover.png`]);
+              const imageBase64Str = hots?.image?.replace(/^.+,/, "");
+            const buf = Buffer.from(imageBase64Str!, "base64");
+              const { data: bucket, error: bucketer } = await supabase.storage
+              .from("hotspots")
+              .upload(`${hots?.name}/cover.png`, buf, {
+                contentType: "image/png",
+              });
+              
+            }
+            else if (!isValidURL(hots.image) && names[0]===hots.name) {
               console.log("hhhhhhhhh")
               const imageBase64Str = hots?.image?.replace(/^.+,/, "");
             const buf = Buffer.from(imageBase64Str!, "base64");
             const { error: bucketer } = await supabase.storage
               .from("hotspots")
-              .update(`${names[0]}/cover.png`, buf, {
+              .update(`${hots.name}/cover.png`, buf, {
                 contentType: "image/png",
               });
               if(bucketer){
@@ -262,11 +296,11 @@ export default function NewCity({ cityId }: NewCityProps) {
               console.log(perror.message);
             }
             if(!isValidURL(hots.image)){
-              const imageBase64Str = hots?.image?.replace(/^.+,/, "");
+            const imageBase64Str = hots?.image?.replace(/^.+,/, "");
             const buf = Buffer.from(imageBase64Str!, "base64");
             const { data: bucket, error: bucketer } = await supabase.storage
               .from("hotspots")
-              .update(`${hots?.name}/cover.png`, buf, {
+              .upload(`${hots?.name}/cover.png`, buf, {
                 contentType: "image/png",
               });
             }
@@ -319,11 +353,13 @@ export default function NewCity({ cityId }: NewCityProps) {
             }
             const imageBase64Str = hots?.image?.replace(/^.+,/, "");
             const buf = Buffer.from(imageBase64Str!, "base64");
+            
             const { data: bucket, error: bucketer } = await supabase.storage
               .from("hotspots")
               .upload(`${hots?.name}/cover.png`, buf, {
                 contentType: "image/png",
               });
+              console.log(bucket)
             if (bucketer) {
               console.log(bucketer?.message);
             }
@@ -348,7 +384,7 @@ export default function NewCity({ cityId }: NewCityProps) {
 
     window.location.reload();
   };
-console.log(streets)
+
   return (
     <div className="flex flex-row items-start pt-0 px-[24px] pb-[80px] gap-[40px] w-full">
       <div className="flex flex-col justify-between items-start px-0 py-[24px] w-[300px] h-[534px]">
