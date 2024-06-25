@@ -85,11 +85,11 @@ export default function RouteTable({}: {}) {
       options: {
         searchable:true,
         sort:true,
-        filter:true,
+        filter:false,
         
         customBodyRender: (value: any) => {
           const [acr, name] = value.split(' / ');
-          console.log(acr, name);
+          
           return (
             <div className="flex flex-row items-center p-0 gap-[16px]">
               <div className="text-[#24BAEC] h-7 border-solid border-[#24BAEC] border-t-[2px] border-b-[2px]">

@@ -17,6 +17,21 @@ import ConfirmationNumberIcon from '@mui/icons-material/ConfirmationNumber';
 import { useRouter } from "next/navigation";
 import { Bars } from "react-loader-spinner";
 
+type UserInfo = {
+  pic: string;
+  name: string;
+  email: string;
+};
+
+
+
+type FlattenedDataRow = {
+  userInfo: string;
+  created_at: string;
+  city: string;
+  status: string;
+  id: string;
+};
 
 
 export default function UsersTable({}: {}) {
@@ -55,8 +70,17 @@ export default function UsersTable({}: {}) {
   const fetchData = async () => {
     setLoading(true);
     const fetchedData = await getUsers();
-    
-    setData(fetchedData);
+    const formattedData: FlattenedDataRow[] = fetchedData.map((row: any) => {
+      const [user, created_at, city, status, id] = row;
+      return {
+        userInfo: `${user.pic} / ${user.name} / ${user.email}`,
+        created_at,
+        city,
+        status,
+        id,
+      };
+    });
+    setData(formattedData);
     setLoading(false);
   };
   useEffect(() => {
@@ -65,30 +89,35 @@ export default function UsersTable({}: {}) {
   
   const columns = [
     {
-      name: "Name",
+      name: "userInfo",
+      label: "User",
       options: {
+        searchable:true,
+        sort:true,
+        filter:false,
         customBodyRender: (value: any) => {
+          const [pic, name,email] = value.split(' / ');
           return (
             <div className="flex flex-row gap-4 items-center">
               <img
-                src={value.pic}
+                src={pic}
                 alt="eee"
                 className="h-[28px] w-[28px] rounded-full"
               />
               <div className="flex flex-col">
-                <p>{value.name}</p>
-                <p>{value.email}</p>
+                <p>{name}</p>
+                <p>{email}</p>
               </div>
             </div>
           );
         },
       },
     },
-    { name: "Created At", options: { filter: false } },
-    "City",
-    "Status",
+    { name: "created_at",label: "Created At", options: { filter: false } },
+    {name:"city",label:'City'},
+    {name:"status",label:'Status'},
     {
-      name: "delete",
+      name: "id",
       label: "Actions",
       options: {
         sort: false,
