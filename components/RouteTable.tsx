@@ -17,6 +17,7 @@ import VisibilityIcon from '@mui/icons-material/Visibility';
 import { deleteRoute, getRoutes } from "@/app/protected/routes/actions";
 import NewRoute from "./NewRoute";
 import { Bars } from "react-loader-spinner";
+import "react-toastify/dist/ReactToastify.css";
 type RouteInfo = {
   acr: string;
   name: string;

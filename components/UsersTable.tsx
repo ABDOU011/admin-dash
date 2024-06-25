@@ -16,6 +16,7 @@ import { ToastContainer, toast } from "react-toastify";
 import ConfirmationNumberIcon from '@mui/icons-material/ConfirmationNumber';
 import { useRouter } from "next/navigation";
 import { Bars } from "react-loader-spinner";
+import "react-toastify/dist/ReactToastify.css";
 
 type UserInfo = {
   pic: string;
@@ -213,7 +214,7 @@ export default function UsersTable({}: {}) {
         toast.success('User updated');
         handleCloseModal();
         } catch (error) {
-          toast.error("error occured check consol");
+          toast.error("error occured check console");
           handleCloseModal()
         }
         

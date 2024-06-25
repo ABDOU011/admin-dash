@@ -35,7 +35,7 @@ try {
   const id = data.user?.id;
   if (error) {
     console.log(error.message);
-    return error
+    
   }
   else{
     const { data, error } = await supabase.from("profiles").insert([
@@ -51,7 +51,7 @@ try {
    
   if (error) {
     console.log(error.message);
-    return error
+    
   }
   else{
     const avatarFile = fs.readFileSync("../../../../assets/avatar.png");
@@ -74,7 +74,7 @@ try {
   }
 }
 } catch (error) {
-  return error;
+  ;
 }
   
 }
@@ -102,12 +102,12 @@ try {
    
   if (error) {
     console.log(error.message);
-    return error
+    
   }
   
 
 } catch (error) {
-  return error;
+  ;
 }
   
 }
@@ -128,7 +128,7 @@ export async function addAdmin(formData: FormData) {
     const id = data.user?.id;
     if (error) {
       console.log(error.message);
-      return error
+      
       
     } else {
       const { data, error } = await supabase.from("profiles").insert([
@@ -143,7 +143,7 @@ export async function addAdmin(formData: FormData) {
       if (error) {
         
         console.log(error.message);
-        return error
+        
       }
       else{
         const avatarFile = fs.readFileSync("../../../../assets/avatar.png");
@@ -164,7 +164,7 @@ export async function addAdmin(formData: FormData) {
       
     }
   } catch (error) {
-    return error
+   
   }
 }
 
@@ -224,7 +224,7 @@ export async function deleteUser(userId : string){
     const { data, error } = await supabase.auth.admin.deleteUser(userId);
   if (error){
     console.log(error)
-    return error
+    
   }
   else{
     const { data, error } = await supabase
@@ -233,7 +233,7 @@ export async function deleteUser(userId : string){
     .match({ id: userId })
     if (error) {
       console.log(error);
-      return error;
+      ;
     } else {
       const { data } = await supabase.storage.from("avatars").list(userId);
       if (data?.length)
@@ -245,7 +245,7 @@ export async function deleteUser(userId : string){
     }
   }
   } catch (error) {
-    return error
+    
   }
   
 

@@ -1,8 +1,8 @@
-"use client";
+
 import { useRef } from "react";
 import { addUser } from "@/app/protected/users/actions/actions";
 import { ToastContainer, toast } from 'react-toastify';
-
+import "react-toastify/dist/ReactToastify.css";
 
 export default function NewUser({}: {}) {
   
@@ -15,10 +15,10 @@ export default function NewUser({}: {}) {
         try {
         await addUser(formData);
         toast.success('User created');
-        ref.current?.reset();
+        ref?.current?.reset()!;
         } catch (error) {
           toast.error("error occured check console");
-          ref.current?.reset();
+          ref?.current?.reset()!;
         }
         
       }} className="flex flex-col items-start p-[24px] gap-[48px] bg-[#FFFFFF] border-[1px] border-[solid] border-[#E4E4E4] rounded-[16px] w-full">

@@ -15,10 +15,10 @@ export default function NewUser({}: {}) {
         try {
           await addAdmin(formData);
           toast.success("Admin added successfully");
-        ref.current?.reset();
+        ref?.current?.reset()!;
         } catch (error) {
           toast.error("error occured")
-          ref.current?.reset();
+          ref?.current?.reset()!;
         }
       }} className="flex flex-col items-start p-[24px] gap-[48px] bg-[#FFFFFF] border-[1px] border-[solid] border-[#E4E4E4] rounded-[16px] w-full">
         <h1 className="font-medium text-[20px] text-[#1B1E28]">
